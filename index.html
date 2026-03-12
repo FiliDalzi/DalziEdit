@@ -1,0 +1,2521 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="description"
+        content="DalziEdit — Editor video professionale gratuito nel browser. Taglia, monta, aggiungi testo ed effetti. Nessuna installazione richiesta.">
+    <meta name="theme-color" content="#7c6fff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DalziEdit">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#7c6fff">
+    <meta name="msapplication-TileImage" content="icons/icon-144.png">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="DalziEdit — Video Editor Gratuito">
+    <meta property="og:description"
+        content="Editor video professionale direttamente nel browser. Completamente gratuito.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="icons/icon-512.png">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="icons/icon-152.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="icons/icon-72.png">
+    <link rel="apple-touch-icon" sizes="96x96" href="icons/icon-96.png">
+    <link rel="apple-touch-icon" sizes="128x128" href="icons/icon-128.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="icons/icon-144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+
+    <!-- Favicon inline SVG -->
+    <link rel="shortcut icon" href="icons/icon-512.png" type="image/x-icon">
+
+    <title>DalziEdit</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0a0a0f;
+            --bg2: #111118;
+            --bg3: #18181f;
+            --bg4: #22222c;
+            --border: #2a2a38;
+            --border2: #3a3a50;
+            --accent: #7c6fff;
+            --accent2: #ff6b9d;
+            --accent3: #00d9b1;
+            --text: #f0f0f8;
+            --text2: #9090b0;
+            --text3: #5a5a78;
+            --track-h: 56px;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-left: env(safe-area-inset-left, 0px);
+            --safe-right: env(safe-area-inset-right, 0px);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            height: 100vh;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            padding-top: var(--safe-top);
+            padding-bottom: var(--safe-bottom);
+            padding-left: var(--safe-left);
+            padding-right: var(--safe-right);
+        }
+
+        /* ===== TOPBAR ===== */
+        #topbar {
+            height: 48px;
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            gap: 6px;
+            flex-shrink: 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+
+        #topbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .logo {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            color: var(--text);
+            margin-right: 8px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .logo-icon {
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 7px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            box-shadow: 0 2px 10px rgba(124, 111, 255, .4);
+        }
+
+        .top-btn {
+            height: 30px;
+            padding: 0 10px;
+            border: 1px solid var(--border);
+            background: var(--bg3);
+            color: var(--text2);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .15s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .top-btn:hover {
+            background: var(--bg4);
+            color: var(--text);
+            border-color: var(--border2);
+        }
+
+        .top-btn.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .top-btn.primary:hover {
+            filter: brightness(1.15);
+        }
+
+        .sep {
+            width: 1px;
+            height: 22px;
+            background: var(--border);
+            margin: 0 2px;
+            flex-shrink: 0;
+        }
+
+        .flex1 {
+            flex: 1;
+            min-width: 8px;
+        }
+
+        #project-name {
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text2);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 5px;
+            min-width: 80px;
+            max-width: 160px;
+            text-align: center;
+            transition: all .15s;
+            user-select: text;
+        }
+
+        #project-name:focus {
+            background: var(--bg3);
+            color: var(--text);
+        }
+
+        /* ===== MAIN ===== */
+        #main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        /* ===== LEFT SIDEBAR ===== */
+        #left-panel {
+            width: 60px;
+            background: var(--bg2);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px 0;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .side-btn {
+            width: 46px;
+            height: 46px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            cursor: pointer;
+            color: var(--text3);
+            transition: all .15s;
+            font-size: 9px;
+            font-weight: 600;
+            border: none;
+            background: none;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+        }
+
+        .side-btn:hover,
+        .side-btn.active {
+            background: var(--bg4);
+            color: var(--accent);
+        }
+
+        .side-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ===== MEDIA PANEL ===== */
+        #media-panel {
+            width: 252px;
+            background: var(--bg2);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: none;
+        }
+
+        .panel-content.active {
+            display: block;
+        }
+
+        .panel-content::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .panel-content::-webkit-scrollbar-thumb {
+            background: var(--border2);
+            border-radius: 2px;
+        }
+
+        /* Upload zone */
+        #upload-zone {
+            border: 2px dashed var(--border2);
+            border-radius: 10px;
+            padding: 20px 12px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: all .2s;
+            background: var(--bg3);
+        }
+
+        #upload-zone:hover,
+        #upload-zone.drag-over {
+            border-color: var(--accent);
+            background: #7c6fff10;
+        }
+
+        #upload-zone p {
+            font-size: 12px;
+            color: var(--text2);
+            margin-top: 6px;
+            font-weight: 500;
+        }
+
+        #upload-zone span {
+            font-size: 10px;
+            color: var(--text3);
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+
+        .media-item {
+            aspect-ratio: 16/9;
+            background: var(--bg4);
+            border-radius: 6px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid transparent;
+            transition: all .15s;
+        }
+
+        .media-item:hover {
+            border-color: var(--accent);
+        }
+
+        .media-item video,
+        .media-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .media-item .media-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0, 0, 0, .85));
+            padding: 14px 5px 3px;
+            font-size: 9px;
+            color: #ffffffcc;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .media-item .media-dur {
+            position: absolute;
+            top: 3px;
+            right: 3px;
+            background: rgba(0, 0, 0, .75);
+            font-size: 9px;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 1px 4px;
+            border-radius: 3px;
+            color: #fff;
+        }
+
+        .media-item .add-btn {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 13px;
+            line-height: 1;
+        }
+
+        .media-item:hover .add-btn {
+            display: flex;
+        }
+
+        .text-preset {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 9px 10px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            font-size: 12px;
+            transition: all .15s;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .text-preset:hover {
+            border-color: var(--accent);
+            background: var(--bg4);
+        }
+
+        .effects-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+
+        .effect-item {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 10px 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all .15s;
+        }
+
+        .effect-item:hover {
+            border-color: var(--accent);
+            background: var(--bg4);
+        }
+
+        .effect-item .eff-icon {
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
+
+        .effect-item .eff-name {
+            font-size: 10px;
+            color: var(--text2);
+        }
+
+        .audio-item {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 9px;
+            cursor: pointer;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: all .15s;
+        }
+
+        .audio-item:hover {
+            border-color: var(--accent3);
+        }
+
+        .audio-name {
+            font-size: 11px;
+            color: var(--text);
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .audio-dur {
+            font-size: 10px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* ===== PREVIEW ===== */
+        #preview-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg);
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        #preview-toolbar {
+            height: 38px;
+            padding: 0 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg2);
+            flex-shrink: 0;
+            overflow-x: auto;
+        }
+
+        #preview-toolbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        #preview-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+            min-height: 0;
+        }
+
+        #preview-canvas-container {
+            position: relative;
+            background: #000;
+            box-shadow: 0 0 0 1px var(--border2), 0 16px 48px rgba(0, 0, 0, .9);
+            border-radius: 3px;
+            overflow: hidden;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        #preview-canvas {
+            display: block;
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* Transport */
+        #transport {
+            padding: 8px 12px;
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            flex-shrink: 0;
+            flex-wrap: nowrap;
+        }
+
+        .transport-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all .15s;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .transport-btn.secondary {
+            background: var(--bg4);
+            color: var(--text2);
+        }
+
+        .transport-btn.secondary:hover {
+            background: var(--bg3);
+            color: var(--text);
+        }
+
+        .transport-btn.play {
+            width: 42px;
+            height: 42px;
+            background: var(--accent);
+            color: #fff;
+            font-size: 15px;
+            box-shadow: 0 0 0 4px rgba(124, 111, 255, .2);
+        }
+
+        .transport-btn.play:hover {
+            filter: brightness(1.2);
+        }
+
+        .time-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--text2);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        #vol-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 60px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--bg4);
+            outline: none;
+            cursor: pointer;
+        }
+
+        #vol-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text2);
+            cursor: pointer;
+        }
+
+        /* ===== RIGHT PANEL ===== */
+        #right-panel {
+            width: 226px;
+            background: var(--bg2);
+            border-left: 1px solid var(--border);
+            flex-shrink: 0;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        #right-panel::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        #right-panel::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .prop-section {
+            margin-bottom: 14px;
+        }
+
+        .prop-section-title {
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 8px;
+        }
+
+        .prop-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+
+        .prop-label {
+            font-size: 10px;
+            color: var(--text3);
+            width: 52px;
+            flex-shrink: 0;
+        }
+
+        .prop-input {
+            flex: 1;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            color: var(--text);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            padding: 4px 7px;
+            outline: none;
+            transition: all .15s;
+            user-select: text;
+            min-width: 0;
+        }
+
+        .prop-input:focus {
+            border-color: var(--accent);
+        }
+
+        .prop-color {
+            width: 26px;
+            height: 26px;
+            border-radius: 5px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .prop-color input[type=color] {
+            width: 38px;
+            height: 38px;
+            border: none;
+            cursor: pointer;
+            margin: -4px;
+        }
+
+        .prop-btn {
+            flex: 1;
+            height: 26px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            color: var(--text2);
+            font-family: inherit;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all .15s;
+            min-width: 0;
+        }
+
+        .prop-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .prop-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 3px;
+            border-radius: 2px;
+            background: var(--bg4);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .prop-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 13px;
+            height: 13px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        .no-selection {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 180px;
+            color: var(--text3);
+            font-size: 11px;
+            text-align: center;
+            gap: 7px;
+        }
+
+        .filter-btn {
+            padding: 7px 5px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 5px;
+            color: var(--text2);
+            font-size: 10px;
+            cursor: pointer;
+            transition: all .15s;
+            text-align: center;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: #7c6fff12;
+        }
+
+        /* ===== TIMELINE ===== */
+        #timeline-area {
+            height: 210px;
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+        }
+
+        #timeline-toolbar {
+            height: 34px;
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            gap: 5px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
+            overflow-x: auto;
+        }
+
+        #timeline-toolbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tl-btn {
+            height: 22px;
+            padding: 0 7px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text2);
+            font-size: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            transition: all .15s;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        .tl-btn:hover {
+            border-color: var(--border2);
+            color: var(--text);
+        }
+
+        .tl-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .zoom-display {
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text3);
+            min-width: 30px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        #timeline-scroll {
+            flex: 1;
+            overflow-x: auto;
+            overflow-y: hidden;
+            position: relative;
+        }
+
+        #timeline-scroll::-webkit-scrollbar {
+            height: 5px;
+        }
+
+        #timeline-scroll::-webkit-scrollbar-track {
+            background: var(--bg3);
+        }
+
+        #timeline-scroll::-webkit-scrollbar-thumb {
+            background: var(--border2);
+            border-radius: 3px;
+        }
+
+        #timeline-inner {
+            height: 100%;
+            position: relative;
+            min-width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #track-labels {
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            width: 92px;
+            background: var(--bg2);
+            border-right: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .track-label {
+            height: var(--track-h);
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            border-bottom: 1px solid var(--border);
+            gap: 5px;
+            font-size: 10px;
+            color: var(--text3);
+            font-weight: 600;
+        }
+
+        #ruler {
+            height: 22px;
+            background: var(--bg3);
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            cursor: pointer;
+            margin-left: 92px;
+            flex-shrink: 0;
+        }
+
+        #tracks-area {
+            flex: 1;
+            margin-left: 92px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .track-row {
+            height: var(--track-h);
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            background: var(--bg2);
+        }
+
+        .track-row:hover {
+            background: #ffffff03;
+        }
+
+        .clip {
+            position: absolute;
+            top: 4px;
+            height: calc(var(--track-h) - 8px);
+            border-radius: 5px;
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: border-color .1s;
+            min-width: 16px;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+        }
+
+        .clip:hover {
+            border-color: rgba(255, 255, 255, .3);
+        }
+
+        .clip.selected {
+            border-color: #fff;
+            box-shadow: 0 0 0 1px #fff;
+        }
+
+        .clip-video {
+            background: linear-gradient(135deg, #2a5cff, #7c6fff);
+        }
+
+        .clip-audio {
+            background: linear-gradient(135deg, #00966b, #00d9b1);
+        }
+
+        .clip-text {
+            background: linear-gradient(135deg, #d44080, #ff6b9d);
+        }
+
+        .clip-effect {
+            background: linear-gradient(135deg, #cc7000, #ffc048);
+        }
+
+        .clip-name {
+            font-size: 9px;
+            color: rgba(255, 255, 255, .9);
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            pointer-events: none;
+        }
+
+        .clip-resize-l,
+        .clip-resize-r {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            cursor: ew-resize;
+            z-index: 5;
+        }
+
+        .clip-resize-l {
+            left: 0;
+        }
+
+        .clip-resize-r {
+            right: 0;
+        }
+
+        .waveform-bg {
+            position: absolute;
+            inset: 0;
+            opacity: .2;
+            background-image: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255, 255, 255, .6) 2px, rgba(255, 255, 255, .6) 3px);
+        }
+
+        #playhead {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #ff3c6e;
+            left: 0;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        #playhead::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 9px;
+            height: 9px;
+            background: #ff3c6e;
+            clip-path: polygon(50% 100%, 0 0, 100% 0);
+        }
+
+        .timeline-empty {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text3);
+            font-size: 11px;
+            gap: 5px;
+            pointer-events: none;
+        }
+
+        /* ===== TOAST ===== */
+        #toast {
+            position: fixed;
+            bottom: calc(20px + var(--safe-bottom));
+            left: 50%;
+            transform: translateX(-50%) translateY(60px);
+            background: var(--bg4);
+            border: 1px solid var(--border2);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-size: 12px;
+            color: var(--text);
+            z-index: 1000;
+            transition: transform .25s cubic-bezier(.175, .885, .32, 1.275);
+            pointer-events: none;
+            white-space: nowrap;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
+        }
+
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .75);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg2);
+            border: 1px solid var(--border2);
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .modal h3 {
+            font-size: 14px;
+            margin-bottom: 14px;
+        }
+
+        .modal .form-group {
+            margin-bottom: 10px;
+        }
+
+        .modal label {
+            font-size: 11px;
+            color: var(--text2);
+            display: block;
+            margin-bottom: 3px;
+        }
+
+        .modal input,
+        .modal select {
+            width: 100%;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 13px;
+            padding: 7px 10px;
+            outline: none;
+        }
+
+        .modal input:focus,
+        .modal select:focus {
+            border-color: var(--accent);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 7px;
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
+
+        #export-progress {
+            margin-top: 10px;
+            display: none;
+        }
+
+        #progress-bar {
+            width: 100%;
+            height: 5px;
+            background: var(--bg4);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        #progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            width: 0%;
+            transition: width .1s;
+            border-radius: 3px;
+        }
+
+        #progress-text {
+            font-size: 10px;
+            color: var(--text2);
+            text-align: center;
+            margin-top: 3px;
+        }
+
+        /* ===== PWA INSTALL BANNER ===== */
+        #install-banner {
+            display: none;
+            position: fixed;
+            bottom: calc(16px + var(--safe-bottom));
+            right: 16px;
+            background: var(--bg3);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 12px 14px;
+            z-index: 200;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, .6);
+            max-width: 280px;
+            animation: slideUp .3s ease;
+        }
+
+        #install-banner.show {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #install-banner p {
+            font-size: 12px;
+            color: var(--text2);
+        }
+
+        #install-banner strong {
+            color: var(--accent);
+        }
+
+        #install-banner .banner-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        /* ===== SW UPDATE BANNER ===== */
+        #update-banner {
+            display: none;
+            position: fixed;
+            top: 56px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: #fff;
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 12px;
+            z-index: 200;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(124, 111, 255, .4);
+        }
+
+        #update-banner.show {
+            display: flex;
+        }
+
+        /* ===== OFFLINE INDICATOR ===== */
+        #offline-badge {
+            display: none;
+            position: fixed;
+            top: 52px;
+            right: 12px;
+            background: #ff4466;
+            color: #fff;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 10px;
+            font-weight: 700;
+            z-index: 200;
+            letter-spacing: 0.5px;
+        }
+
+        #offline-badge.show {
+            display: block;
+        }
+
+        /* ===== RESPONSIVE: hide panels on small screens ===== */
+        @media (max-width: 768px) {
+            #media-panel {
+                width: 200px;
+            }
+
+            #right-panel {
+                display: none;
+            }
+
+            #timeline-area {
+                height: 180px;
+            }
+        }
+
+        @media (max-width: 540px) {
+            #media-panel {
+                display: none;
+            }
+
+            #left-panel {
+                display: none;
+            }
+        }
+
+        ::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- OFFLINE BADGE -->
+    <div id="offline-badge">📡 OFFLINE</div>
+
+    <!-- UPDATE BANNER -->
+    <div id="update-banner">
+        ✨ Nuova versione disponibile —
+        <button onclick="applyUpdate()"
+            style="background:rgba(255,255,255,.2);border:none;color:#fff;padding:3px 10px;border-radius:5px;cursor:pointer;font-family:inherit;font-size:12px">Aggiorna</button>
+        <button onclick="document.getElementById('update-banner').classList.remove('show')"
+            style="background:none;border:none;color:rgba(255,255,255,.6);cursor:pointer;font-size:16px;padding:0 2px">×</button>
+    </div>
+
+    <!-- TOPBAR -->
+    <div id="topbar">
+        <div class="logo">
+            <div class="logo-icon">✂</div>
+            DalziEdit
+        </div>
+        <div class="sep"></div>
+        <button class="top-btn" onclick="newProject()">📄 Nuovo</button>
+        <button class="top-btn" onclick="document.getElementById('proj-input').click()">📂 Apri</button>
+        <button class="top-btn" onclick="saveProject()">💾 Salva</button>
+        <div class="sep"></div>
+        <button class="top-btn" onclick="undo()">↩</button>
+        <button class="top-btn" onclick="redo()">↪</button>
+        <div class="sep"></div>
+        <input id="project-name" value="Progetto senza titolo" spellcheck="false">
+        <div class="flex1"></div>
+        <select class="top-btn" id="res-select" onchange="changeResolution()" style="padding:0 6px">
+            <option value="1920x1080">1080p</option>
+            <option value="1280x720">720p</option>
+            <option value="1080x1920">9:16</option>
+            <option value="1080x1080">1:1</option>
+            <option value="3840x2160">4K</option>
+        </select>
+        <button class="top-btn primary" onclick="showExportModal()">⬆ Esporta</button>
+        <input type="file" id="proj-input" accept=".dalzi,.json" style="display:none" onchange="loadProject(event)">
+    </div>
+
+    <!-- MAIN -->
+    <div id="main">
+
+        <!-- SIDEBAR -->
+        <div id="left-panel">
+            <button class="side-btn active" id="btn-media" onclick="switchPanel('media')" title="Media">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" />
+                    <polyline points="8 21 12 17 16 21" />
+                </svg>Media
+            </button>
+            <button class="side-btn" id="btn-text" onclick="switchPanel('text')" title="Testo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="4 7 4 4 20 4 20 7" />
+                    <line x1="9" y1="20" x2="15" y2="20" />
+                    <line x1="12" y1="4" x2="12" y2="20" />
+                </svg>Testo
+            </button>
+            <button class="side-btn" id="btn-effects" onclick="switchPanel('effects')" title="Effetti">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>Effetti
+            </button>
+            <button class="side-btn" id="btn-audio" onclick="switchPanel('audio')" title="Audio">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18V5l12-2v13" />
+                    <circle cx="6" cy="18" r="3" />
+                    <circle cx="18" cy="16" r="3" />
+                </svg>Audio
+            </button>
+            <button class="side-btn" id="btn-transitions" onclick="switchPanel('transitions')" title="Transizioni">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="7" width="8" height="10" rx="1" />
+                    <rect x="14" y="7" width="8" height="10" rx="1" />
+                    <polyline points="10 12 14 12" />
+                    <polyline points="12 10 14 12 12 14" />
+                </svg>Trans.
+            </button>
+        </div>
+
+        <!-- MEDIA PANEL -->
+        <div id="media-panel">
+            <!-- Media -->
+            <div class="panel-content active" id="media-tab">
+                <div id="upload-zone" onclick="document.getElementById('file-input').click()"
+                    ondragover="e=>{e.preventDefault();this.classList.add('drag-over')}"
+                    ondragleave="e=>{this.classList.remove('drag-over')}" ondrop="handleDrop(event)">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"
+                        style="display:block;margin:0 auto">
+                        <polyline points="16 16 12 12 8 16" />
+                        <line x1="12" y1="12" x2="12" y2="21" />
+                        <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+                    </svg>
+                    <p>Importa file</p>
+                    <span>Video · Audio · Immagini</span>
+                    <input type="file" id="file-input" multiple accept="video/*,audio/*,image/*" style="display:none"
+                        onchange="handleFiles(event)">
+                </div>
+                <div class="media-grid" id="media-grid"></div>
+            </div>
+            <!-- Text -->
+            <div class="panel-content" id="text-tab">
+                <button class="top-btn primary" style="width:100%;justify-content:center;margin-bottom:8px"
+                    onclick="addTextClip()">+ Aggiungi Testo</button>
+                <div id="text-presets"></div>
+            </div>
+            <!-- Effects -->
+            <div class="panel-content" id="effects-tab">
+                <p style="font-size:10px;color:var(--text3);margin-bottom:8px">Applica al clip selezionato</p>
+                <div class="effects-grid" id="effects-grid"></div>
+            </div>
+            <!-- Audio -->
+            <div class="panel-content" id="audio-tab">
+                <div id="audio-list"></div>
+            </div>
+            <!-- Transitions -->
+            <div class="panel-content" id="transitions-tab">
+                <p style="font-size:10px;color:var(--text3);margin-bottom:8px">Applica transizione al clip selezionato
+                </p>
+                <div class="effects-grid" id="transitions-grid"></div>
+            </div>
+        </div>
+
+        <!-- PREVIEW -->
+        <div id="preview-area">
+            <div id="preview-toolbar">
+                <button class="top-btn" onclick="splitClip()">✂ Taglia</button>
+                <button class="top-btn" onclick="deleteSelected()">🗑</button>
+                <button class="top-btn" onclick="duplicateSelected()">⧉</button>
+                <div class="sep"></div>
+                <button class="top-btn" id="snap-btn" onclick="toggleSnap()">🧲</button>
+                <button class="top-btn" onclick="zoomTimeline(1.25)">+</button>
+                <button class="top-btn" onclick="zoomTimeline(0.8)">−</button>
+                <div class="flex1"></div>
+                <span style="font-size:10px;color:var(--text3)" id="dur-display">0:00</span>
+            </div>
+            <div id="preview-wrapper">
+                <div id="preview-canvas-container">
+                    <canvas id="preview-canvas" width="1920" height="1080"></canvas>
+                </div>
+            </div>
+            <div id="transport">
+                <button class="transport-btn secondary" onclick="jumpToStart()">⏮</button>
+                <button class="transport-btn secondary" onclick="stepBack()">⏪</button>
+                <button class="transport-btn play" id="play-btn" onclick="togglePlay()">▶</button>
+                <button class="transport-btn secondary" onclick="stepForward()">⏩</button>
+                <button class="transport-btn secondary" onclick="jumpToEnd()">⏭</button>
+                <span class="time-code" id="time-display">0:00 / 0:00</span>
+                <span style="font-size:11px;color:var(--text3)">🔊</span>
+                <input type="range" id="vol-slider" min="0" max="100" value="80" oninput="state.volume=this.value/100">
+            </div>
+        </div>
+
+        <!-- RIGHT PROPS PANEL -->
+        <div id="right-panel">
+            <div id="no-selection" class="no-selection">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                    style="opacity:.3">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M8 10h8M8 14h4" />
+                </svg>
+                <p style="font-size:11px">Seleziona un clip</p>
+            </div>
+            <div id="clip-props" style="display:none"></div>
+        </div>
+    </div>
+
+    <!-- TIMELINE -->
+    <div id="timeline-area">
+        <div id="timeline-toolbar">
+            <span style="font-size:10px;color:var(--text3);font-weight:700;flex-shrink:0">TIMELINE</span>
+            <div class="sep"></div>
+            <button class="tl-btn" onclick="zoomTimeline(1.25)">+ Zoom</button>
+            <button class="tl-btn" onclick="zoomTimeline(0.8)">− Zoom</button>
+            <span class="zoom-display" id="zoom-display">1×</span>
+            <div class="sep"></div>
+            <button class="tl-btn" id="magnet-btn" onclick="toggleSnap()">🧲 Snap</button>
+            <div class="flex1"></div>
+            <button class="tl-btn" onclick="addAudioTrack()">+ Audio</button>
+            <button class="tl-btn" onclick="addTextTrack()">+ Testo</button>
+        </div>
+        <div id="timeline-scroll" style="display:flex;flex:1;overflow-x:auto;overflow-y:hidden;position:relative">
+            <div id="track-labels"></div>
+            <div style="flex:1;display:flex;flex-direction:column;position:relative;min-width:0">
+                <div id="ruler" onclick="seekToClick(event)"></div>
+                <div id="tracks-area" style="flex:1;position:relative;overflow:hidden">
+                    <div id="playhead"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPORT MODAL -->
+    <div class="modal-overlay" id="export-modal">
+        <div class="modal">
+            <h3>⬆ Esporta — DalziEdit</h3>
+            <div class="form-group">
+                <label>Formato output</label>
+                <select id="export-format">
+                    <option value="webm">WebM (video — supportato nei browser)</option>
+                    <option value="frames">Frame PNG (per uso esterno)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Risoluzione</label>
+                <select id="export-res">
+                    <option value="1920x1080">1920×1080 Full HD</option>
+                    <option value="1280x720">1280×720 HD</option>
+                    <option value="960x540">960×540</option>
+                    <option value="640x360">640×360</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Frame Rate</label>
+                <select id="export-fps">
+                    <option value="30">30 fps</option>
+                    <option value="60">60 fps</option>
+                    <option value="24">24 fps (cinema)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Qualità</label>
+                <select id="export-quality">
+                    <option value="high">Alta (8 Mbps)</option>
+                    <option value="medium">Media (4 Mbps)</option>
+                    <option value="low">Bassa (2 Mbps)</option>
+                </select>
+            </div>
+            <div id="export-progress">
+                <div id="progress-bar">
+                    <div id="progress-fill"></div>
+                </div>
+                <div id="progress-text">Rendering...</div>
+            </div>
+            <div class="modal-actions">
+                <button class="top-btn" onclick="closeExportModal()">Annulla</button>
+                <button class="top-btn primary" onclick="startExport()">Esporta</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PWA INSTALL BANNER -->
+    <div id="install-banner">
+        <p><strong>Installa DalziEdit</strong><br>Aggiungilo alla schermata home per usarlo offline!</p>
+        <div class="banner-btns">
+            <button class="top-btn primary" id="install-btn" onclick="installPWA()">Installa</button>
+            <button class="top-btn" onclick="document.getElementById('install-banner').classList.remove('show')">Non
+                ora</button>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toast"></div>
+
+    <script>
+        // =================== PWA REGISTRATION ===================
+        let deferredInstallPrompt = null;
+        let swRegistration = null;
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', async () => {
+                try {
+                    swRegistration = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+                    console.log('[DalziEdit] SW registered, scope:', swRegistration.scope);
+
+                    // Check for updates
+                    swRegistration.addEventListener('updatefound', () => {
+                        const newSW = swRegistration.installing;
+                        newSW.addEventListener('statechange', () => {
+                            if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+                                document.getElementById('update-banner').classList.add('show');
+                            }
+                        });
+                    });
+
+                    // Periodic update check every 60 minutes
+                    setInterval(() => swRegistration.update(), 60 * 60 * 1000);
+                } catch (err) {
+                    console.warn('[DalziEdit] SW registration failed:', err);
+                }
+
+                // Listen for SW messages
+                navigator.serviceWorker.addEventListener('message', event => {
+                    const { type, message } = event.data || {};
+                    if (type === 'SW_ACTIVATED') toast('✨ ' + (message || 'DalziEdit aggiornato!'));
+                    if (type === 'TRIGGER_AUTOSAVE') autoSaveToIndexedDB();
+                });
+            });
+        }
+
+        function applyUpdate() {
+            if (swRegistration?.waiting) {
+                swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            }
+            navigator.serviceWorker.addEventListener('controllerchange', () => location.reload());
+            document.getElementById('update-banner').classList.remove('show');
+        }
+
+        // PWA Install Prompt
+        window.addEventListener('beforeinstallprompt', e => {
+            e.preventDefault();
+            deferredInstallPrompt = e;
+            // Show banner after 8s
+            setTimeout(() => {
+                document.getElementById('install-banner').classList.add('show');
+            }, 8000);
+        });
+
+        window.addEventListener('appinstalled', () => {
+            document.getElementById('install-banner').classList.remove('show');
+            deferredInstallPrompt = null;
+            toast('🎉 DalziEdit installato con successo!');
+        });
+
+        async function installPWA() {
+            if (!deferredInstallPrompt) return;
+            deferredInstallPrompt.prompt();
+            const { outcome } = await deferredInstallPrompt.userChoice;
+            deferredInstallPrompt = null;
+            document.getElementById('install-banner').classList.remove('show');
+            if (outcome === 'accepted') toast('✅ Installazione in corso...');
+        }
+
+        // Online/Offline detection
+        window.addEventListener('online', () => {
+            document.getElementById('offline-badge').classList.remove('show');
+            toast('🌐 Connessione ripristinata');
+        });
+        window.addEventListener('offline', () => {
+            document.getElementById('offline-badge').classList.add('show');
+            toast('📡 Sei offline — DalziEdit continua a funzionare!');
+        });
+        if (!navigator.onLine) document.getElementById('offline-badge').classList.add('show');
+
+        // URL params on startup
+        window.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(location.search);
+            if (params.get('action') === 'new') newProject();
+            if (params.get('action') === 'import') document.getElementById('file-input').click();
+        });
+
+        // =================== INDEXEDDB AUTOSAVE ===================
+        let db = null;
+        function openDB() {
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open('DalziEditDB', 1);
+                req.onupgradeneeded = e => {
+                    e.target.result.createObjectStore('projects', { keyPath: 'id' });
+                };
+                req.onsuccess = e => resolve(e.target.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        async function autoSaveToIndexedDB() {
+            try {
+                if (!db) db = await openDB();
+                const data = {
+                    id: 'autosave',
+                    name: document.getElementById('project-name').value,
+                    tracks: state.tracks,
+                    resolution: state.resolution,
+                    fps: state.fps,
+                    savedAt: Date.now(),
+                };
+                const tx = db.transaction('projects', 'readwrite');
+                tx.objectStore('projects').put(data);
+                console.log('[DalziEdit] Auto-saved to IndexedDB');
+            } catch (err) {
+                console.warn('[DalziEdit] IndexedDB save failed:', err);
+            }
+        }
+
+        async function loadAutosave() {
+            try {
+                if (!db) db = await openDB();
+                return new Promise((resolve, reject) => {
+                    const req = db.transaction('projects').objectStore('projects').get('autosave');
+                    req.onsuccess = () => resolve(req.result);
+                    req.onerror = () => reject(req.error);
+                });
+            } catch { return null; }
+        }
+
+        // Auto-save every 2 minutes
+        setInterval(autoSaveToIndexedDB, 120000);
+
+        // =================== STATE ===================
+        const state = {
+            tracks: [
+                { id: 'video1', type: 'video', name: 'Video 1', clips: [] },
+                { id: 'audio1', type: 'audio', name: 'Audio 1', clips: [] },
+                { id: 'text1', type: 'text', name: 'Testo 1', clips: [] },
+            ],
+            mediaPool: [],
+            currentTime: 0,
+            duration: 0,
+            playing: false,
+            zoom: 1,
+            snapEnabled: true,
+            selectedClip: null,
+            selectedTrack: null,
+            fps: 30,
+            resolution: { w: 1920, h: 1080 },
+            volume: 0.8,
+            history: [],
+            historyIndex: -1,
+        };
+
+        let clipIdCounter = 0;
+        let mediaIdCounter = 0;
+        const imageCache = {};
+
+        // =================== INIT ===================
+        async function init() {
+            renderTracks();
+            renderRuler();
+            resizePreview();
+            window.addEventListener('resize', resizePreview);
+            buildPanels();
+            renderCanvas();
+            updateTimeDisplay();
+            document.addEventListener('keydown', handleKeyboard);
+            pushHistory();
+
+            // Try to restore autosave
+            const saved = await loadAutosave();
+            if (saved && saved.tracks?.some(t => t.clips.length > 0)) {
+                if (confirm(`Trovato salvataggio automatico (${new Date(saved.savedAt).toLocaleString()}). Vuoi ripristinarlo?`)) {
+                    state.tracks = saved.tracks;
+                    if (saved.resolution) state.resolution = saved.resolution;
+                    document.getElementById('project-name').value = saved.name || 'Progetto';
+                    updateDuration();
+                    renderTracks();
+                    renderCanvas();
+                    toast('✅ Autosave ripristinato!');
+                }
+            } else {
+                toast('Benvenuto in DalziEdit! Importa un video per iniziare.');
+            }
+        }
+
+        function resizePreview() {
+            const wrapper = document.getElementById('preview-wrapper');
+            const canvas = document.getElementById('preview-canvas');
+            const { w, h } = state.resolution;
+            const maxW = wrapper.clientWidth - 32;
+            const maxH = wrapper.clientHeight - 32;
+            const ratio = Math.min(maxW / w, maxH / h, 1);
+            const dw = Math.max(Math.floor(w * ratio), 80);
+            const dh = Math.max(Math.floor(h * ratio), 45);
+            canvas.style.width = dw + 'px';
+            canvas.style.height = dh + 'px';
+            document.getElementById('preview-canvas-container').style.cssText = `width:${dw}px;height:${dh}px`;
+        }
+
+        // =================== PANELS ===================
+        function switchPanel(panel) {
+            document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + panel)?.classList.add('active');
+            const map = { media: 'media-tab', text: 'text-tab', effects: 'effects-tab', audio: 'audio-tab', transitions: 'transitions-tab' };
+            document.querySelectorAll('.panel-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(map[panel])?.classList.add('active');
+        }
+
+        function buildPanels() {
+            // Text presets
+            const presets = [
+                { name: 'Titolo Grande', weight: 800, size: 80 },
+                { name: 'Sottotitolo', weight: 400, size: 38 },
+                { name: 'Didascalia', weight: 400, size: 26 },
+                { name: 'Titolo Film', weight: 900, size: 88 },
+                { name: 'Lower Third', weight: 600, size: 34 },
+                { name: 'Etichetta', weight: 500, size: 22 },
+            ];
+            const tp = document.getElementById('text-presets');
+            presets.forEach(p => {
+                const d = document.createElement('div');
+                d.className = 'text-preset';
+                d.innerHTML = `<span style="font-size:${Math.min(p.size / 5, 16)}px;font-weight:${p.weight};color:var(--text);flex:1">${p.name}</span><span style="font-size:10px;color:var(--text3)">${p.size}px</span>`;
+                d.onclick = () => addTextClip(p);
+                tp.appendChild(d);
+            });
+
+            // Effects
+            [['🌊', 'Fade In'], ['🌅', 'Fade Out'], ['⚡', 'Flash'], ['🎞', 'Pellicola'],
+            ['📺', 'VHS'], ['🌈', 'Vivido'], ['❄', 'Gelo'], ['🔥', 'Caldo'],
+            ['🎨', 'Pittura'], ['⬛', 'Vignetta'], ['🔵', 'Blur'], ['✨', 'Glow']
+            ].forEach(([icon, name]) => {
+                const d = document.createElement('div');
+                d.className = 'effect-item';
+                d.innerHTML = `<div class="eff-icon">${icon}</div><div class="eff-name">${name}</div>`;
+                d.onclick = () => applyEffect(name);
+                document.getElementById('effects-grid').appendChild(d);
+            });
+
+            // Audio
+            [['🎵', 'Chill Beats', '2:34'], ['🎬', 'Epic Cinematic', '1:58'], ['🎤', 'Upbeat Pop', '3:12'],
+            ['🎧', 'Lo-Fi Study', '4:05'], ['🎻', 'Dramatic Rise', '0:45'], ['🥁', 'Hip Hop Beat', '2:18']
+            ].forEach(([icon, name, dur]) => {
+                const d = document.createElement('div');
+                d.className = 'audio-item';
+                d.innerHTML = `<span style="font-size:18px">${icon}</span><div style="flex:1;min-width:0"><div class="audio-name">${name}</div><div class="audio-dur">${dur}</div></div><button class="top-btn" onclick="addBuiltinAudio('${name}','${dur}');event.stopPropagation()">+</button>`;
+                document.getElementById('audio-list').appendChild(d);
+            });
+
+            // Transitions
+            [['⬛', 'Dissolvenza'], ['⬅', 'Scorri Sx'], ['➡', 'Scorri Dx'], ['⬆', 'Alza'],
+            ['🔲', 'Iris'], ['🔄', 'Ruota'], ['⚡', 'Zoom'], ['✨', 'Scintilla']
+            ].forEach(([icon, name]) => {
+                const d = document.createElement('div');
+                d.className = 'effect-item';
+                d.innerHTML = `<div class="eff-icon">${icon}</div><div class="eff-name">${name}</div>`;
+                d.onclick = () => applyTransition(name);
+                document.getElementById('transitions-grid').appendChild(d);
+            });
+        }
+
+        // =================== MEDIA ===================
+        function handleFiles(e) { Array.from(e.target.files).forEach(addMediaFile); e.target.value = ''; }
+        function handleDrop(e) {
+            e.preventDefault();
+            document.getElementById('upload-zone').classList.remove('drag-over');
+            Array.from(e.dataTransfer.files).forEach(addMediaFile);
+        }
+
+        function addMediaFile(file) {
+            const id = 'media_' + (++mediaIdCounter);
+            const type = file.type.startsWith('video') ? 'video' : file.type.startsWith('audio') ? 'audio' : 'image';
+            const url = URL.createObjectURL(file);
+            const item = { id, name: file.name, type, url, file, duration: 5 };
+            if (type === 'video') {
+                const v = document.createElement('video');
+                v.src = url; v.preload = 'metadata';
+                v.onloadedmetadata = () => { item.duration = v.duration; item.videoEl = v; updateDuration(); renderMediaGrid(); };
+            } else if (type === 'audio') {
+                const a = document.createElement('audio');
+                a.src = url; a.preload = 'metadata';
+                a.onloadedmetadata = () => { item.duration = a.duration; item.audioEl = a; };
+            }
+            state.mediaPool.push(item);
+            renderMediaGrid();
+            setUnsaved();
+            toast(`Importato: ${file.name}`);
+        }
+
+        function renderMediaGrid() {
+            const g = document.getElementById('media-grid');
+            g.innerHTML = '';
+            state.mediaPool.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'media-item';
+                if (item.type === 'video') {
+                    const v = document.createElement('video');
+                    v.src = item.url; v.muted = true; v.preload = 'metadata';
+                    v.style.cssText = 'width:100%;height:100%;object-fit:cover';
+                    v.onmouseenter = () => v.play(); v.onmouseleave = () => { v.pause(); v.currentTime = 0; };
+                    div.appendChild(v);
+                } else if (item.type === 'image') {
+                    const img = document.createElement('img'); img.src = item.url; div.appendChild(img);
+                } else {
+                    div.innerHTML = `<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:24px">🎵</div>`;
+                }
+                div.innerHTML += `<div class="media-dur">${fmtDur(item.duration || 5)}</div><div class="media-info">${item.name}</div><div class="add-btn" onclick="addClipFromMedia('${item.id}');event.stopPropagation()">+</div>`;
+                div.ondblclick = () => addClipFromMedia(item.id);
+                g.appendChild(div);
+            });
+        }
+
+        function addClipFromMedia(mediaId) {
+            const media = state.mediaPool.find(m => m.id === mediaId);
+            if (!media) return;
+            const tType = media.type === 'audio' ? 'audio' : 'video';
+            const track = state.tracks.find(t => t.type === tType) || state.tracks[0];
+            const clip = {
+                id: 'clip_' + (++clipIdCounter), mediaId,
+                type: tType, name: media.name.replace(/\.[^.]+$/, ''),
+                start: getTrackEnd(track), duration: Math.min(media.duration || 5, 60),
+                trimIn: 0, opacity: 1, speed: 1, volume: 1,
+                x: 0, y: 0, scaleX: 1, scaleY: 1, filter: 'none', transition: null,
+            };
+            track.clips.push(clip);
+            pushHistory(); updateDuration(); renderTracks(); selectClip(clip, track); setUnsaved();
+            toast(`Aggiunto "${clip.name}"`);
+        }
+
+        function getTrackEnd(track) {
+            if (!track.clips.length) return 0;
+            return Math.max(...track.clips.map(c => c.start + c.duration));
+        }
+
+        // =================== TEXT ===================
+        function addTextClip(preset = null) {
+            const track = state.tracks.find(t => t.type === 'text') || state.tracks[state.tracks.length - 1];
+            const clip = {
+                id: 'clip_' + (++clipIdCounter), type: 'text',
+                name: preset?.name || 'Testo', text: preset?.name || 'Testo',
+                start: state.currentTime, duration: 3,
+                x: 0.5, y: 0.5, fontSize: preset?.size || 60,
+                fontWeight: preset?.weight || 700, color: '#ffffff',
+                opacity: 1, filter: 'none',
+            };
+            track.clips.push(clip);
+            pushHistory(); updateDuration(); renderTracks(); selectClip(clip, track); setUnsaved();
+            switchPanel('text');
+            toast('Testo aggiunto');
+        }
+
+        function addBuiltinAudio(name, durStr) {
+            const [m, s] = durStr.split(':').map(Number);
+            const track = state.tracks.find(t => t.type === 'audio') || state.tracks[0];
+            const clip = {
+                id: 'clip_' + (++clipIdCounter), type: 'audio', name,
+                start: getTrackEnd(track), duration: m * 60 + s, volume: 1, filter: 'none',
+            };
+            track.clips.push(clip);
+            pushHistory(); updateDuration(); renderTracks(); setUnsaved();
+            toast(`Aggiunto: ${name}`);
+        }
+
+        // =================== EFFECTS ===================
+        function applyEffect(name) {
+            if (!state.selectedClip) { toast('Seleziona prima un clip'); return; }
+            const filterMap = {
+                'Fade In': 'none', 'Fade Out': 'none', 'Flash': 'brightness(3)',
+                'Pellicola': 'sepia(40%) contrast(1.1)',
+                'VHS': 'saturate(1.2) contrast(1.1) brightness(0.95)',
+                'Vivido': 'saturate(2) contrast(1.1)',
+                'Gelo': 'hue-rotate(200deg) saturate(0.8) brightness(1.1)',
+                'Caldo': 'hue-rotate(-20deg) saturate(1.5) brightness(1.05)',
+                'Pittura': 'saturate(3) contrast(1.5)',
+                'Vignetta': 'brightness(0.85)',
+                'Blur': 'blur(3px)',
+                'Glow': 'brightness(1.3) saturate(1.5)',
+            };
+            state.selectedClip.filter = filterMap[name] || 'none';
+            state.selectedClip.effect = name;
+            pushHistory(); renderCanvas(); renderClipProps(); setUnsaved();
+            toast(`Effetto "${name}" applicato`);
+        }
+
+        function applyTransition(name) {
+            if (!state.selectedClip) { toast('Seleziona prima un clip'); return; }
+            state.selectedClip.transition = name;
+            pushHistory(); renderTracks(); setUnsaved();
+            toast(`Transizione "${name}" applicata`);
+        }
+
+        // =================== TIMELINE ===================
+        function renderTracks() {
+            const labels = document.getElementById('track-labels');
+            const tracksArea = document.getElementById('tracks-area');
+            labels.innerHTML = `<div style="height:22px;background:var(--bg3);border-bottom:1px solid var(--border)"></div>`;
+            tracksArea.querySelectorAll('.track-row').forEach(r => r.remove());
+            const pxPerSec = 80 * state.zoom;
+            const totalW = Math.max((state.duration + 5), 30) * pxPerSec;
+
+            state.tracks.forEach(track => {
+                const icons = { video: '🎬', audio: '🎵', text: '✏', effect: '✨' };
+                const lb = document.createElement('div');
+                lb.className = 'track-label';
+                lb.innerHTML = `${icons[track.type] || '📌'} <span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${track.name}</span>`;
+                labels.appendChild(lb);
+
+                const row = document.createElement('div');
+                row.className = 'track-row';
+                row.dataset.trackId = track.id;
+                row.style.width = totalW + 'px';
+                row.addEventListener('dragover', e => e.preventDefault());
+                row.addEventListener('drop', e => { e.preventDefault(); });
+
+                track.clips.forEach(clip => row.appendChild(createClipEl(clip, track, pxPerSec)));
+                tracksArea.insertBefore(row, document.getElementById('playhead'));
+            });
+
+            tracksArea.style.width = totalW + 'px';
+            updatePlayheadPos();
+            renderRuler();
+        }
+
+        function createClipEl(clip, track, pxPerSec) {
+            const el = document.createElement('div');
+            el.className = `clip clip-${clip.type} ${clip.id === state.selectedClip?.id ? 'selected' : ''}`;
+            el.id = 'el_' + clip.id;
+            el.style.left = (clip.start * pxPerSec) + 'px';
+            el.style.width = Math.max(clip.duration * pxPerSec, 16) + 'px';
+            el.innerHTML = `
+    <div class="clip-resize-l"></div>
+    ${clip.type === 'audio' ? '<div class="waveform-bg"></div>' : ''}
+    <span class="clip-name">${clip.type === 'text' ? '✏ ' : ''}${clip.name}</span>
+    <div class="clip-resize-r"></div>`;
+            el.addEventListener('mousedown', e => {
+                if (e.target.classList.contains('clip-resize-l') || e.target.classList.contains('clip-resize-r')) return;
+                selectClip(clip, track); startDrag(e, clip, track, el, pxPerSec);
+            });
+            el.querySelectorAll('.clip-resize-l, .clip-resize-r').forEach(h => {
+                h.addEventListener('mousedown', e => {
+                    e.stopPropagation();
+                    selectClip(clip, track);
+                    startResize(e, clip, h.classList.contains('clip-resize-r') ? 'right' : 'left', pxPerSec);
+                });
+            });
+            return el;
+        }
+
+        function renderRuler() {
+            const ruler = document.getElementById('ruler');
+            const totalSec = Math.max(state.duration + 5, 30);
+            const pxPerSec = 80 * state.zoom;
+            const totalW = totalSec * pxPerSec;
+            ruler.style.width = totalW + 'px';
+            let html = '';
+            const step = pxPerSec > 160 ? 0.5 : pxPerSec > 80 ? 1 : pxPerSec > 40 ? 2 : pxPerSec > 20 ? 5 : 10;
+            for (let t = 0; t <= totalSec; t += step) {
+                const x = t * pxPerSec;
+                const main = (t / step) % 4 === 0;
+                html += `<div style="position:absolute;left:${x}px;top:0;width:1px;height:${main ? '100%' : '50%'};background:var(--border2);opacity:${main ? 1 : 0.4}"></div>`;
+                if (main) html += `<div style="position:absolute;left:${x + 3}px;top:5px;font-size:8px;color:var(--text3);font-family:'JetBrains Mono',monospace">${fmtDur(t)}</div>`;
+            }
+            ruler.innerHTML = html;
+        }
+
+        // =================== DRAG ===================
+        function startDrag(e, clip, track, el, pxPerSec) {
+            const offsetX = e.clientX - el.getBoundingClientRect().left;
+            const onMove = ev => {
+                const rect = document.getElementById('tracks-area').getBoundingClientRect();
+                let start = Math.max(0, (ev.clientX - rect.left - offsetX) / pxPerSec);
+                if (state.snapEnabled) start = snapTime(start, clip);
+                clip.start = parseFloat(start.toFixed(3));
+                el.style.left = (clip.start * pxPerSec) + 'px';
+                updateDuration(); updatePlayheadPos();
+            };
+            const onUp = () => {
+                pushHistory(); renderTracks();
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        }
+
+        function startResize(e, clip, side, pxPerSec) {
+            const orig = { start: clip.start, dur: clip.duration, x: e.clientX };
+            const onMove = ev => {
+                const dx = (ev.clientX - orig.x) / pxPerSec;
+                if (side === 'right') {
+                    clip.duration = Math.max(0.2, orig.dur + dx);
+                } else {
+                    const ns = Math.max(0, orig.start + dx);
+                    const nd = orig.dur - (ns - orig.start);
+                    if (nd > 0.2) { clip.start = ns; clip.duration = nd; }
+                }
+                const el = document.getElementById('el_' + clip.id);
+                if (el) { el.style.left = (clip.start * pxPerSec) + 'px'; el.style.width = Math.max(16, clip.duration * pxPerSec) + 'px'; }
+                updateDuration();
+            };
+            const onUp = () => {
+                pushHistory(); renderTracks();
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        }
+
+        function snapTime(t, exclude) {
+            const thr = 0.25; let best = t, bestDist = thr;
+            state.tracks.forEach(tr => tr.clips.forEach(c => {
+                if (c === exclude) return;
+                [c.start, c.start + c.duration].forEach(sp => {
+                    const d = Math.abs(t - sp);
+                    if (d < bestDist) { bestDist = d; best = sp; }
+                });
+            }));
+            if (Math.abs(t - state.currentTime) < bestDist) best = state.currentTime;
+            return best;
+        }
+
+        // =================== SELECTION ===================
+        function selectClip(clip, track) {
+            state.selectedClip = clip; state.selectedTrack = track;
+            renderTracks(); renderClipProps(); renderCanvas();
+        }
+
+        function renderClipProps() {
+            const clip = state.selectedClip;
+            if (!clip) {
+                document.getElementById('no-selection').style.display = 'flex';
+                document.getElementById('clip-props').style.display = 'none';
+                return;
+            }
+            document.getElementById('no-selection').style.display = 'none';
+            const el = document.getElementById('clip-props');
+            el.style.display = 'block';
+            let h = `
+    <div class="prop-section">
+      <div class="prop-section-title">📌 Clip</div>
+      <div class="prop-row"><span class="prop-label">Nome</span><input class="prop-input" value="${clip.name}" onchange="upProp('name',this.value)" style="user-select:text"></div>
+      <div class="prop-row"><span class="prop-label">Inizio</span><input class="prop-input" type="number" step="0.1" value="${clip.start.toFixed(2)}" onchange="upProp('start',parseFloat(this.value))" style="user-select:text"></div>
+      <div class="prop-row"><span class="prop-label">Durata</span><input class="prop-input" type="number" step="0.1" min="0.1" value="${clip.duration.toFixed(2)}" onchange="upProp('duration',parseFloat(this.value))" style="user-select:text"></div>
+    </div>`;
+            if (clip.type !== 'audio') {
+                h += `
+      <div class="prop-section">
+        <div class="prop-section-title">🎨 Visuale</div>
+        <div class="prop-row"><span class="prop-label">Opacità</span><input type="range" class="prop-slider" min="0" max="1" step="0.01" value="${clip.opacity ?? 1}" oninput="upProp('opacity',parseFloat(this.value))"></div>
+        <div class="prop-row"><span class="prop-label">Filtro</span>
+          <select class="prop-input" onchange="upProp('filter',this.value)" style="font-family:inherit;padding:3px">
+            ${['none', 'grayscale(100%)', 'sepia(100%)', 'blur(4px)', 'brightness(1.4)', 'contrast(1.5)', 'saturate(2)', 'invert(100%)']
+                        .map(f => `<option value="${f}" ${clip.filter === f ? 'selected' : ''}>${f === 'none' ? 'Nessuno' : f}</option>`).join('')}
+          </select>
+        </div>
+      </div>`;
+            }
+            if (clip.type === 'text') {
+                h += `
+      <div class="prop-section">
+        <div class="prop-section-title">✏ Testo</div>
+        <div class="prop-row"><span class="prop-label">Testo</span><input class="prop-input" value="${clip.text || ''}" onchange="upProp('text',this.value)" style="user-select:text"></div>
+        <div class="prop-row"><span class="prop-label">Dim.</span><input class="prop-input" type="number" value="${clip.fontSize || 60}" onchange="upProp('fontSize',parseInt(this.value))" style="user-select:text"></div>
+        <div class="prop-row"><span class="prop-label">Peso</span><input class="prop-input" type="number" step="100" min="100" max="900" value="${clip.fontWeight || 700}" onchange="upProp('fontWeight',parseInt(this.value))" style="user-select:text"></div>
+        <div class="prop-row"><span class="prop-label">Colore</span><div class="prop-color"><input type="color" value="${clip.color || '#ffffff'}" oninput="upProp('color',this.value)"></div></div>
+        <div class="prop-row"><span class="prop-label">X (0-1)</span><input class="prop-input" type="number" step="0.01" min="0" max="1" value="${(clip.x ?? 0.5).toFixed(2)}" onchange="upProp('x',parseFloat(this.value))" style="user-select:text"></div>
+        <div class="prop-row"><span class="prop-label">Y (0-1)</span><input class="prop-input" type="number" step="0.01" min="0" max="1" value="${(clip.y ?? 0.5).toFixed(2)}" onchange="upProp('y',parseFloat(this.value))" style="user-select:text"></div>
+      </div>`;
+            }
+            h += `
+    <div class="prop-section">
+      <div class="prop-section-title">⚡ Azioni</div>
+      <div class="prop-row">
+        <button class="prop-btn" onclick="splitClip()">✂ Taglia</button>
+        <button class="prop-btn" onclick="duplicateSelected()">⧉ Duplica</button>
+      </div>
+      <div class="prop-row"><button class="prop-btn" style="color:#ff4466;border-color:#ff446640" onclick="deleteSelected()">🗑 Elimina clip</button></div>
+    </div>`;
+            el.innerHTML = h;
+        }
+
+        function upProp(k, v) {
+            if (!state.selectedClip) return;
+            state.selectedClip[k] = v;
+            pushHistory();
+            if (k === 'start' || k === 'duration') { renderTracks(); updateDuration(); }
+            renderCanvas(); setUnsaved();
+        }
+
+        // =================== PLAYBACK ===================
+        function togglePlay() { state.playing ? pause() : play(); }
+
+        function play() {
+            state.playing = true;
+            document.getElementById('play-btn').textContent = '⏸';
+            state.tracks.forEach(t => t.clips.forEach(c => {
+                if (c.type === 'video' && c.mediaId) {
+                    const m = state.mediaPool.find(x => x.id === c.mediaId);
+                    if (m?.videoEl && state.currentTime >= c.start && state.currentTime < c.start + c.duration) {
+                        m.videoEl.currentTime = state.currentTime - c.start;
+                        m.videoEl.volume = Math.min(1, (c.volume || 1) * state.volume);
+                        m.videoEl.play().catch(() => { });
+                    }
+                }
+            }));
+            let last = performance.now();
+            const frame = now => {
+                if (!state.playing) return;
+                const dt = (now - last) / 1000;
+                last = now;
+                state.currentTime = Math.min(state.currentTime + dt, state.duration || 0.001);
+                if (state.currentTime >= state.duration && state.duration > 0) { state.currentTime = 0; }
+                updateTimeDisplay(); updatePlayheadPos(); renderCanvas();
+                requestAnimationFrame(frame);
+            };
+            requestAnimationFrame(frame);
+        }
+
+        function pause() {
+            state.playing = false;
+            document.getElementById('play-btn').textContent = '▶';
+            state.tracks.forEach(t => t.clips.forEach(c => {
+                if (c.type === 'video' && c.mediaId) {
+                    state.mediaPool.find(m => m.id === c.mediaId)?.videoEl?.pause();
+                }
+            }));
+        }
+
+        function jumpToStart() { state.currentTime = 0; sync(); }
+        function jumpToEnd() { state.currentTime = state.duration; sync(); }
+        function stepBack() { state.currentTime = Math.max(0, state.currentTime - 1 / state.fps); sync(); }
+        function stepForward() { state.currentTime = Math.min(state.duration, state.currentTime + 1 / state.fps); sync(); }
+        function sync() { updateTimeDisplay(); updatePlayheadPos(); renderCanvas(); }
+
+        function seekToClick(e) {
+            const r = document.getElementById('ruler').getBoundingClientRect();
+            state.currentTime = Math.max(0, (e.clientX - r.left) / (80 * state.zoom));
+            sync();
+        }
+
+        function updatePlayheadPos() {
+            const ph = document.getElementById('playhead');
+            const x = state.currentTime * 80 * state.zoom;
+            ph.style.left = x + 'px';
+            const scroll = document.getElementById('timeline-scroll');
+            const abs = x + 92;
+            if (abs > scroll.scrollLeft + scroll.clientWidth - 60 || abs < scroll.scrollLeft + 60) {
+                scroll.scrollLeft = abs - scroll.clientWidth / 2;
+            }
+        }
+
+        function updateTimeDisplay() {
+            document.getElementById('time-display').textContent = `${fmtDur(state.currentTime)} / ${fmtDur(state.duration)}`;
+            document.getElementById('dur-display').textContent = fmtDur(state.duration);
+        }
+
+        function updateDuration() {
+            let max = 0;
+            state.tracks.forEach(t => t.clips.forEach(c => { max = Math.max(max, c.start + c.duration); }));
+            state.duration = max;
+            updateTimeDisplay();
+        }
+
+        // =================== CANVAS ===================
+        function renderCanvas() {
+            const canvas = document.getElementById('preview-canvas');
+            const ctx = canvas.getContext('2d');
+            const { w, h } = state.resolution;
+            canvas.width = w; canvas.height = h;
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, w, h);
+
+            const hasClips = state.tracks.some(t => t.clips.length > 0);
+            if (!hasClips) {
+                ctx.fillStyle = '#111128';
+                ctx.fillRect(0, 0, w, h);
+                ctx.font = `bold 36px DM Sans, sans-serif`;
+                ctx.fillStyle = 'rgba(255,255,255,0.06)';
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText('DalziEdit — Importa un video per iniziare', w / 2, h / 2);
+                return;
+            }
+
+            state.tracks.forEach(track => {
+                track.clips.forEach(clip => {
+                    const ct = state.currentTime;
+                    if (ct < clip.start || ct >= clip.start + clip.duration) return;
+                    ctx.save();
+                    ctx.globalAlpha = clip.opacity ?? 1;
+                    if (clip.filter && clip.filter !== 'none') ctx.filter = clip.filter;
+
+                    if (clip.type === 'video' && clip.mediaId) {
+                        const m = state.mediaPool.find(x => x.id === clip.mediaId);
+                        if (m?.videoEl) {
+                            try {
+                                const v = m.videoEl;
+                                const vr = v.videoWidth / v.videoHeight;
+                                const sr = w / h;
+                                let dx = 0, dy = 0, dw = w, dh = h;
+                                if (vr > sr) { dh = h; dw = h * vr; dx = -(dw - w) / 2; }
+                                else { dw = w; dh = w / vr; dy = -(dh - h) / 2; }
+                                ctx.drawImage(v, dx, dy, dw, dh);
+                            } catch { }
+                        }
+                    } else if (clip.type === 'image' && clip.mediaId) {
+                        const m = state.mediaPool.find(x => x.id === clip.mediaId);
+                        if (m?.url) {
+                            let img = imageCache[m.url];
+                            if (!img) { img = new Image(); img.src = m.url; imageCache[m.url] = img; }
+                            if (img.complete) ctx.drawImage(img, 0, 0, w, h);
+                        }
+                    } else if (clip.type === 'text') {
+                        ctx.font = `${clip.fontWeight || 700} ${clip.fontSize || 60}px DM Sans, sans-serif`;
+                        ctx.fillStyle = clip.color || '#fff';
+                        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                        ctx.shadowColor = 'rgba(0,0,0,.85)'; ctx.shadowBlur = 14;
+                        ctx.fillText(clip.text || clip.name, (clip.x ?? 0.5) * w, (clip.y ?? 0.5) * h);
+                    }
+                    ctx.restore();
+                });
+            });
+        }
+
+        // =================== CLIP OPS ===================
+        function splitClip() {
+            if (!state.selectedClip) { toast('Seleziona un clip'); return; }
+            const clip = state.selectedClip;
+            const track = state.selectedTrack || state.tracks.find(t => t.clips.includes(clip));
+            if (!track || state.currentTime <= clip.start || state.currentTime >= clip.start + clip.duration) {
+                toast('Posiziona la testina dentro il clip'); return;
+            }
+            const origDur = clip.duration;
+            clip.duration = state.currentTime - clip.start;
+            track.clips.push({ ...clip, id: 'clip_' + (++clipIdCounter), start: state.currentTime, duration: origDur - clip.duration, trimIn: clip.trimIn + clip.duration });
+            pushHistory(); updateDuration(); renderTracks(); setUnsaved();
+            toast('Clip tagliato');
+        }
+
+        function deleteSelected() {
+            if (!state.selectedClip) return;
+            state.tracks.forEach(t => {
+                const i = t.clips.indexOf(state.selectedClip);
+                if (i !== -1) t.clips.splice(i, 1);
+            });
+            state.selectedClip = null; state.selectedTrack = null;
+            pushHistory(); updateDuration(); renderTracks(); renderClipProps(); renderCanvas(); setUnsaved();
+            toast('Eliminato');
+        }
+
+        function duplicateSelected() {
+            if (!state.selectedClip) return;
+            const track = state.selectedTrack || state.tracks.find(t => t.clips.includes(state.selectedClip));
+            if (!track) return;
+            const nc = { ...state.selectedClip, id: 'clip_' + (++clipIdCounter), start: state.selectedClip.start + state.selectedClip.duration };
+            track.clips.push(nc);
+            pushHistory(); updateDuration(); renderTracks(); selectClip(nc, track); setUnsaved();
+            toast('Duplicato');
+        }
+
+        // =================== TRACKS ===================
+        function addAudioTrack() {
+            const n = state.tracks.filter(t => t.type === 'audio').length + 1;
+            state.tracks.push({ id: 'aud_' + Date.now(), type: 'audio', name: `Audio ${n}`, clips: [] });
+            renderTracks(); toast('Traccia audio aggiunta');
+        }
+        function addTextTrack() {
+            const n = state.tracks.filter(t => t.type === 'text').length + 1;
+            state.tracks.push({ id: 'txt_' + Date.now(), type: 'text', name: `Testo ${n}`, clips: [] });
+            renderTracks(); toast('Traccia testo aggiunta');
+        }
+
+        // =================== ZOOM / SNAP ===================
+        function zoomTimeline(f) {
+            state.zoom = Math.max(0.1, Math.min(12, state.zoom * f));
+            document.getElementById('zoom-display').textContent = state.zoom.toFixed(1) + '×';
+            renderTracks();
+        }
+        function toggleSnap() {
+            state.snapEnabled = !state.snapEnabled;
+            ['snap-btn', 'magnet-btn'].forEach(id => document.getElementById(id)?.classList.toggle('active', state.snapEnabled));
+            toast('Snap: ' + (state.snapEnabled ? 'ON' : 'OFF'));
+        }
+
+        // =================== HISTORY ===================
+        function pushHistory() {
+            const snap = JSON.stringify(state.tracks.map(t => ({ ...t, clips: t.clips.map(c => ({ ...c })) })));
+            state.history = state.history.slice(0, state.historyIndex + 1);
+            state.history.push(snap);
+            if (state.history.length > 60) state.history.shift();
+            state.historyIndex = state.history.length - 1;
+        }
+        function undo() {
+            if (state.historyIndex <= 0) { toast('Niente da annullare'); return; }
+            state.historyIndex--;
+            state.tracks = JSON.parse(state.history[state.historyIndex]);
+            state.selectedClip = null;
+            updateDuration(); renderTracks(); renderClipProps(); renderCanvas();
+        }
+        function redo() {
+            if (state.historyIndex >= state.history.length - 1) { toast('Niente da ripetere'); return; }
+            state.historyIndex++;
+            state.tracks = JSON.parse(state.history[state.historyIndex]);
+            state.selectedClip = null;
+            updateDuration(); renderTracks(); renderClipProps(); renderCanvas();
+        }
+
+        // =================== RESOLUTION ===================
+        function changeResolution() {
+            const [w, h] = document.getElementById('res-select').value.split('x').map(Number);
+            state.resolution = { w, h };
+            resizePreview(); renderCanvas();
+        }
+
+        // =================== KEYBOARD ===================
+        function handleKeyboard(e) {
+            if (['INPUT', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
+            switch (e.key) {
+                case ' ': e.preventDefault(); togglePlay(); break;
+                case 'Delete': case 'Backspace': deleteSelected(); break;
+                case 'ArrowLeft': stepBack(); break;
+                case 'ArrowRight': stepForward(); break;
+                case 'Home': jumpToStart(); break;
+                case 'End': jumpToEnd(); break;
+                case 'b': case 'B': splitClip(); break;
+                case 'z': if (e.ctrlKey || e.metaKey) { e.shiftKey ? redo() : undo(); e.preventDefault(); } break;
+                case 'y': if (e.ctrlKey || e.metaKey) { redo(); e.preventDefault(); } break;
+                case 's': if (e.ctrlKey || e.metaKey) { saveProject(); e.preventDefault(); } break;
+                case 'd': if (e.ctrlKey || e.metaKey) { duplicateSelected(); e.preventDefault(); } break;
+                case '+': case '=': if (e.ctrlKey || e.metaKey) { zoomTimeline(1.25); e.preventDefault(); } break;
+                case '-': if (e.ctrlKey || e.metaKey) { zoomTimeline(0.8); e.preventDefault(); } break;
+            }
+        }
+
+        // =================== SAVE/LOAD ===================
+        function saveProject() {
+            const data = {
+                appName: 'DalziEdit', version: '1.0',
+                name: document.getElementById('project-name').value,
+                resolution: state.resolution, fps: state.fps,
+                tracks: state.tracks, savedAt: new Date().toISOString(),
+            };
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = (data.name || 'progetto') + '.dalzi';
+            a.click(); URL.revokeObjectURL(a.href);
+            autoSaveToIndexedDB();
+            toast('💾 Progetto salvato!');
+        }
+
+        function loadProject(e) {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    document.getElementById('project-name').value = data.name || 'Progetto';
+                    if (data.resolution) state.resolution = data.resolution;
+                    if (data.fps) state.fps = data.fps;
+                    state.tracks = data.tracks || state.tracks;
+                    state.selectedClip = null;
+                    updateDuration(); renderTracks(); renderCanvas(); renderClipProps();
+                    toast('✅ Progetto caricato!');
+                } catch { toast('❌ Errore nel file'); }
+            };
+            reader.readAsText(file);
+        }
+
+        function newProject() {
+            if (!confirm('Creare un nuovo progetto? I dati non salvati andranno persi.')) return;
+            state.tracks = [
+                { id: 'video1', type: 'video', name: 'Video 1', clips: [] },
+                { id: 'audio1', type: 'audio', name: 'Audio 1', clips: [] },
+                { id: 'text1', type: 'text', name: 'Testo 1', clips: [] },
+            ];
+            state.currentTime = 0; state.duration = 0; state.selectedClip = null;
+            state.history = []; state.historyIndex = -1;
+            document.getElementById('project-name').value = 'Progetto senza titolo';
+            renderTracks(); renderCanvas(); renderClipProps(); updateTimeDisplay(); pushHistory();
+            toast('Nuovo progetto');
+        }
+
+        function setUnsaved() {
+            document.title = '● DalziEdit — ' + (document.getElementById('project-name')?.value || '');
+        }
+
+        // =================== EXPORT ===================
+        function showExportModal() { document.getElementById('export-modal').classList.add('open'); }
+        function closeExportModal() { document.getElementById('export-modal').classList.remove('open'); }
+
+        async function startExport() {
+            if (state.duration <= 0) { toast('Timeline vuota'); return; }
+            const format = document.getElementById('export-format').value;
+            const [ew, eh] = document.getElementById('export-res').value.split('x').map(Number);
+            const fps = parseInt(document.getElementById('export-fps').value);
+            const quality = document.getElementById('export-quality').value;
+            const prog = document.getElementById('export-progress');
+            prog.style.display = 'block';
+            const fill = document.getElementById('progress-fill');
+            const txt = document.getElementById('progress-text');
+
+            const ec = document.createElement('canvas');
+            ec.width = ew; ec.height = eh;
+            const ctx = ec.getContext('2d');
+
+            if (format === 'frames') {
+                const total = Math.min(Math.floor(state.duration * fps), 240);
+                const orig = state.currentTime;
+                for (let f = 0; f < total; f++) {
+                    state.currentTime = f / fps;
+                    renderToCtx(ctx, ew, eh);
+                    const pct = Math.round((f / total) * 100);
+                    fill.style.width = pct + '%';
+                    txt.textContent = `Frame ${f + 1}/${total}`;
+                    await new Promise(r => setTimeout(r, 0));
+                }
+                state.currentTime = orig;
+                // Download first frame
+                const a = document.createElement('a');
+                a.href = ec.toDataURL('image/png');
+                a.download = (document.getElementById('project-name').value || 'dalziedit') + '_frame001.png';
+                a.click();
+                closeExportModal();
+                toast('Frame esportato come PNG');
+                return;
+            }
+
+            // WebM via MediaRecorder
+            try {
+                const stream = ec.captureStream(fps);
+                const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
+                const bps = quality === 'high' ? 8e6 : quality === 'medium' ? 4e6 : 2e6;
+                const recorder = new MediaRecorder(stream, { mimeType: mime, videoBitsPerSecond: bps });
+                const chunks = [];
+                recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+                recorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'video/webm' });
+                    const a = document.createElement('a');
+                    a.href = URL.createObjectURL(blob);
+                    a.download = (document.getElementById('project-name').value || 'dalziedit') + '.webm';
+                    a.click(); URL.revokeObjectURL(a.href);
+                    closeExportModal();
+                    toast('✅ Video esportato!');
+                };
+                recorder.start();
+                const orig = state.currentTime;
+                state.currentTime = 0;
+                const total = Math.floor(state.duration * fps);
+                for (let f = 0; f < total; f++) {
+                    state.currentTime = f / fps;
+                    renderToCtx(ctx, ew, eh);
+                    fill.style.width = Math.round((f / total) * 100) + '%';
+                    txt.textContent = `Rendering ${Math.round((f / total) * 100)}%...`;
+                    await new Promise(r => setTimeout(r, 1000 / fps));
+                }
+                state.currentTime = orig;
+                recorder.stop();
+            } catch (err) {
+                console.error(err);
+                toast('⚠ Errore export. Prova Chrome/Edge.');
+                closeExportModal();
+            }
+        }
+
+        function renderToCtx(ctx, w, h) {
+            ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
+            state.tracks.forEach(track => {
+                track.clips.forEach(clip => {
+                    if (state.currentTime < clip.start || state.currentTime >= clip.start + clip.duration) return;
+                    ctx.save();
+                    ctx.globalAlpha = clip.opacity ?? 1;
+                    if (clip.filter && clip.filter !== 'none') ctx.filter = clip.filter;
+                    if (clip.type === 'video' && clip.mediaId) {
+                        const m = state.mediaPool.find(x => x.id === clip.mediaId);
+                        if (m?.videoEl) try { ctx.drawImage(m.videoEl, 0, 0, w, h); } catch { }
+                    } else if (clip.type === 'text') {
+                        ctx.font = `${clip.fontWeight || 700} ${clip.fontSize || 60}px sans-serif`;
+                        ctx.fillStyle = clip.color || '#fff';
+                        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                        ctx.shadowColor = 'rgba(0,0,0,.8)'; ctx.shadowBlur = 12;
+                        ctx.fillText(clip.text || clip.name, (clip.x ?? 0.5) * w, (clip.y ?? 0.5) * h);
+                    }
+                    ctx.restore();
+                });
+            });
+        }
+
+        // =================== UTILS ===================
+        function fmtDur(s) {
+            if (isNaN(s) || s < 0) s = 0;
+            return `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+        }
+        function toast(msg, d = 2400) {
+            const t = document.getElementById('toast');
+            t.textContent = msg; t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), d);
+        }
+
+        // =================== START ===================
+        init();
+    </script>
+</body>
+
+</html>
