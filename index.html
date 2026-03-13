@@ -32,7 +32,6 @@
     <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-152.png">
     <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
 
-    <!-- Favicon inline SVG -->
     <!-- Favicon -->
     <link rel="shortcut icon" href="icons/icon-512.png" type="image/x-icon">
 
@@ -1354,19 +1353,43 @@
                     <span>Trascina qui oppure tocca</span>
                 </div>
 
-                <!-- Input separati per massima compatibilità mobile -->
-                <!-- "image/*,video/*" senza audio apre la galleria su iOS/Android -->
-                <input type="file" id="file-input-all" multiple accept="image/*,video/*,audio/*" style="display:none"
-                    onchange="handleFiles(event)">
-                <input type="file" id="file-input-video" multiple accept="video/*" style="display:none"
-                    onchange="handleFiles(event)">
-                <input type="file" id="file-input-image" multiple accept="image/*" style="display:none"
-                    onchange="handleFiles(event)">
-                <input type="file" id="file-input-audio" multiple accept="audio/*" style="display:none"
-                    onchange="handleFiles(event)">
-                <!-- Alias per compatibilità con codice esistente -->
-                <input type="file" id="file-input" multiple accept="image/*,video/*,audio/*" style="display:none"
-                    onchange="handleFiles(event)">
+                <!--
+        Input separati per massima compatibilità mobile/desktop.
+
+        VIDEO  — mp4, mov, avi, mkv, webm, 3gp, 3g2, m4v, wmv, flv, ogv
+                 .mov e .hevc sono i formati nativi di iPhone/iPad
+                 .3gp / .3g2 sono i formati nativi Android
+        FOTO   — jpg, jpeg, png, gif, webp, bmp, tiff, heic, heif, avif, svg
+                 .heic / .heif sono i formati nativi iPhone (iOS 11+)
+        AUDIO  — mp3, wav, ogg, aac, m4a, flac, opus, weba, wma, aiff, caf
+                 .caf è il formato audio nativo iOS
+                 .m4a è il formato registrazioni vocali iPhone
+      -->
+
+                <!-- Tutti i tipi — apre galleria generale su mobile -->
+                <input type="file" id="file-input-all" multiple
+                    accept="video/mp4,video/quicktime,video/x-msvideo,video/x-matroska,video/webm,video/3gpp,video/3gpp2,video/x-m4v,video/x-ms-wmv,video/x-flv,video/ogg,video/*,image/jpeg,image/png,image/gif,image/webp,image/bmp,image/tiff,image/heic,image/heif,image/avif,image/svg+xml,image/*,audio/mpeg,audio/wav,audio/ogg,audio/aac,audio/mp4,audio/x-flac,audio/opus,audio/webm,audio/x-ms-wma,audio/aiff,audio/x-caf,audio/*,.mp4,.mov,.avi,.mkv,.webm,.3gp,.3g2,.m4v,.wmv,.flv,.ogv,.hevc,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tiff,.tif,.heic,.heif,.avif,.svg,.mp3,.wav,.ogg,.aac,.m4a,.flac,.opus,.weba,.wma,.aiff,.caf"
+                    style="display:none" onchange="handleFiles(event)">
+
+                <!-- Solo video — su iOS/Android apre la galleria filtrata per video -->
+                <input type="file" id="file-input-video" multiple
+                    accept="video/mp4,video/quicktime,video/x-msvideo,video/x-matroska,video/webm,video/3gpp,video/3gpp2,video/x-m4v,video/x-ms-wmv,video/x-flv,video/ogg,video/*,.mp4,.mov,.avi,.mkv,.webm,.3gp,.3g2,.m4v,.wmv,.flv,.ogv,.hevc"
+                    style="display:none" onchange="handleFiles(event)">
+
+                <!-- Solo foto — su iOS/Android apre Foto filtrata per immagini -->
+                <input type="file" id="file-input-image" multiple
+                    accept="image/jpeg,image/png,image/gif,image/webp,image/bmp,image/tiff,image/heic,image/heif,image/avif,image/svg+xml,image/*,.jpg,.jpeg,.png,.gif,.webp,.bmp,.tiff,.tif,.heic,.heif,.avif,.svg"
+                    style="display:none" onchange="handleFiles(event)">
+
+                <!-- Solo audio -->
+                <input type="file" id="file-input-audio" multiple
+                    accept="audio/mpeg,audio/wav,audio/ogg,audio/aac,audio/mp4,audio/x-flac,audio/opus,audio/webm,audio/x-ms-wma,audio/aiff,audio/x-caf,audio/*,.mp3,.wav,.ogg,.aac,.m4a,.flac,.opus,.weba,.wma,.aiff,.caf"
+                    style="display:none" onchange="handleFiles(event)">
+
+                <!-- Alias generico usato da codice esistente (action=import ecc.) -->
+                <input type="file" id="file-input" multiple
+                    accept="video/*,image/*,audio/*,.mp4,.mov,.avi,.mkv,.webm,.3gp,.3g2,.m4v,.hevc,.jpg,.jpeg,.png,.gif,.webp,.heic,.heif,.avif,.mp3,.wav,.aac,.m4a,.flac,.opus"
+                    style="display:none" onchange="handleFiles(event)">
 
                 <!-- Bottoni rapidi per mobile -->
                 <div id="mobile-import-btns" style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap">
@@ -1806,24 +1829,63 @@
             Array.from(e.dataTransfer.files).forEach(addMediaFile);
         }
 
+        function detectMediaType(file) {
+            if (file.type.startsWith('video/')) return 'video';
+            if (file.type.startsWith('audio/')) return 'audio';
+            if (file.type.startsWith('image/')) return 'image';
+            const ext = (file.name.split('.').pop() || '').toLowerCase();
+            const V = ['mp4', 'mov', 'avi', 'mkv', 'webm', '3gp', '3g2', 'm4v', 'wmv', 'flv', 'ogv', 'hevc', 'ts', 'mts', 'm2ts', 'vob', 'divx', 'xvid', 'rm', 'rmvb', 'asf', 'amv'];
+            const A = ['mp3', 'wav', 'ogg', 'aac', 'm4a', 'flac', 'opus', 'weba', 'wma', 'aiff', 'aif', 'caf', 'mid', 'midi', 'ra', 'ac3', 'dts', 'ape', 'mka'];
+            const I = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tiff', 'tif', 'heic', 'heif', 'avif', 'svg', 'ico', 'jfif', 'raw', 'cr2', 'nef', 'arw', 'dng'];
+            if (V.includes(ext)) return 'video';
+            if (A.includes(ext)) return 'audio';
+            if (I.includes(ext)) return 'image';
+            return 'video';
+        }
+
         function addMediaFile(file) {
             const id = 'media_' + (++mediaIdCounter);
-            const type = file.type.startsWith('video') ? 'video' : file.type.startsWith('audio') ? 'audio' : 'image';
+            const type = detectMediaType(file);
             const url = URL.createObjectURL(file);
             const item = { id, name: file.name, type, url, file, duration: 5 };
             if (type === 'video') {
                 const v = document.createElement('video');
                 v.src = url; v.preload = 'metadata';
                 v.onloadedmetadata = () => { item.duration = v.duration; item.videoEl = v; updateDuration(); renderMediaGrid(); };
+                v.onerror = () => {
+                    item.unsupported = true; renderMediaGrid();
+                    toast(`⚠ "${file.name}" — preview non disponibile (formato non supportato dal browser).`);
+                };
             } else if (type === 'audio') {
                 const a = document.createElement('audio');
                 a.src = url; a.preload = 'metadata';
                 a.onloadedmetadata = () => { item.duration = a.duration; item.audioEl = a; };
+                a.onerror = () => { item.unsupported = true; };
+            } else if (type === 'image') {
+                const img = new Image();
+                img.src = url;
+                img.onload = () => { item.previewUrl = url; renderMediaGrid(); };
+                img.onerror = () => {
+                    item.unsupported = true; item.previewUrl = null; renderMediaGrid();
+                    toast(`⚠ "${file.name}" — HEIC/HEIF: preview non disponibile nel browser, ma il file è importato.`);
+                };
             }
             state.mediaPool.push(item);
             renderMediaGrid();
             setUnsaved();
             toast(`Importato: ${file.name}`);
+        }
+
+        // Icone placeholder per tipi/estensioni non previewable
+        const MEDIA_ICONS = {
+            video: { default: '🎬', hevc: '🎬', mov: '🎬', avi: '📽', mkv: '📦', '3gp': '📱', '3g2': '📱', wmv: '🪟', flv: '▶' },
+            audio: { default: '🎵', mp3: '🎵', wav: '🔊', aac: '🎶', m4a: '🎙', flac: '💎', ogg: '🎶', caf: '🍎', wma: '🪟' },
+            image: { default: '🖼', heic: '📷', heif: '📷', raw: '📷', cr2: '📷', nef: '📷', svg: '🎨' },
+        };
+        function mediaIcon(item) {
+            const ext = (item.name.split('.').pop() || '').toLowerCase();
+            const map = MEDIA_ICONS[item.type] || {};
+            return map[ext] || map.default || '📁';
         }
 
         function renderMediaGrid() {
@@ -1832,18 +1894,44 @@
             state.mediaPool.forEach(item => {
                 const div = document.createElement('div');
                 div.className = 'media-item';
-                if (item.type === 'video') {
+                const ext = (item.name.split('.').pop() || '').toLowerCase();
+
+                if (item.type === 'video' && !item.unsupported) {
                     const v = document.createElement('video');
                     v.src = item.url; v.muted = true; v.preload = 'metadata';
                     v.style.cssText = 'width:100%;height:100%;object-fit:cover';
-                    v.onmouseenter = () => v.play(); v.onmouseleave = () => { v.pause(); v.currentTime = 0; };
+                    v.onmouseenter = () => v.play().catch(() => { });
+                    v.onmouseleave = () => { v.pause(); v.currentTime = 0; };
+                    // Nascondi il video e mostra icona se non si carica
+                    v.onerror = () => {
+                        v.style.display = 'none';
+                        const ph = div.querySelector('.media-placeholder');
+                        if (ph) ph.style.display = 'flex';
+                    };
                     div.appendChild(v);
-                } else if (item.type === 'image') {
-                    const img = document.createElement('img'); img.src = item.url; div.appendChild(img);
+                    // Placeholder sovrapposto (nascosto di default)
+                    const ph = document.createElement('div');
+                    ph.className = 'media-placeholder';
+                    ph.style.cssText = 'display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:4px;font-size:26px;background:var(--bg4)';
+                    ph.innerHTML = `${mediaIcon(item)}<span style="font-size:9px;color:var(--text3);text-transform:uppercase">${ext}</span>`;
+                    div.appendChild(ph);
+                } else if (item.type === 'image' && !item.unsupported && item.previewUrl !== null) {
+                    const img = document.createElement('img');
+                    img.src = item.previewUrl || item.url;
+                    img.onerror = () => {
+                        img.style.display = 'none';
+                        div.insertAdjacentHTML('afterbegin',
+                            `<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:26px;background:var(--bg4)">${mediaIcon(item)}<span style="font-size:9px;color:var(--text3);text-transform:uppercase">${ext}</span></div>`);
+                    };
+                    div.appendChild(img);
                 } else {
-                    div.innerHTML = `<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:24px">🎵</div>`;
+                    // Audio, HEIC non supportato, o qualsiasi altro tipo senza preview
+                    div.innerHTML = `<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:26px;background:var(--bg4)">${mediaIcon(item)}<span style="font-size:9px;color:var(--text3);text-transform:uppercase">${ext}</span></div>`;
                 }
-                div.innerHTML += `<div class="media-dur">${fmtDur(item.duration || 5)}</div><div class="media-info">${item.name}</div><div class="add-btn" onclick="addClipFromMedia('${item.id}');event.stopPropagation()">+</div>`;
+
+                // Badge formato in alto a destra
+                const extBadge = `<div class="media-dur" style="text-transform:uppercase">${item.unsupported ? '⚠ ' : ''}${fmtDur(item.duration || 5)}</div>`;
+                div.innerHTML += `${extBadge}<div class="media-info">${item.name}</div><div class="add-btn" onclick="addClipFromMedia('${item.id}');event.stopPropagation()">+</div>`;
                 div.ondblclick = () => addClipFromMedia(item.id);
                 g.appendChild(div);
             });
