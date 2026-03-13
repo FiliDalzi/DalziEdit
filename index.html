@@ -1908,13 +1908,11 @@
             pushHistory();
             const saved = await loadAutosave();
             if (saved && saved.tracks?.some(t => t.clips.length > 0)) {
-                if (confirm(`Ripristinare autosave del ${new Date(saved.savedAt).toLocaleString()}?`)) {
-                    state.tracks = saved.tracks;
-                    if (saved.resolution) state.resolution = saved.resolution;
-                    document.getElementById('project-name').value = saved.name || 'Progetto';
-                    updateDuration(); renderTracks(); renderCanvas();
-                    toast('✅ Autosave ripristinato');
-                }
+                state.tracks = saved.tracks;
+                if (saved.resolution) state.resolution = saved.resolution;
+                document.getElementById('project-name').value = saved.name || 'Progetto';
+                updateDuration(); renderTracks(); renderCanvas();
+                toast(`↩ Sessione ripristinata (${new Date(saved.savedAt).toLocaleTimeString()})`);
             } else {
                 toast('Benvenuto in DalziEdit! Importa un video per iniziare.');
             }
