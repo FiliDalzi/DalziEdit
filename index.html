@@ -33,6 +33,7 @@
     <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
 
     <!-- Favicon inline SVG -->
+    <!-- Favicon -->
     <link rel="shortcut icon" href="icons/icon-512.png" type="image/x-icon">
 
     <title>DalziEdit</title>
@@ -1340,19 +1341,41 @@
         <div id="media-panel">
             <!-- Media -->
             <div class="panel-content active" id="media-tab">
-                <div id="upload-zone" onclick="document.getElementById('file-input').click()"
-                    ondragover="e=>{e.preventDefault();this.classList.add('drag-over')}"
-                    ondragleave="e=>{this.classList.remove('drag-over')}" ondrop="handleDrop(event)">
+                <div id="upload-zone" ondragover="e=>{e.preventDefault();this.classList.add('drag-over')}"
+                    ondragleave="e=>{this.classList.remove('drag-over')}" ondrop="handleDrop(event)"
+                    onclick="document.getElementById('file-input-all').click()">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"
                         style="display:block;margin:0 auto">
                         <polyline points="16 16 12 12 8 16" />
                         <line x1="12" y1="12" x2="12" y2="21" />
                         <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
                     </svg>
-                    <p>Importa file</p>
-                    <span>Video · Audio · Immagini</span>
-                    <input type="file" id="file-input" multiple accept="video/*,audio/*,image/*" style="display:none"
-                        onchange="handleFiles(event)">
+                    <p>Importa media</p>
+                    <span>Trascina qui oppure tocca</span>
+                </div>
+
+                <!-- Input separati per massima compatibilità mobile -->
+                <!-- "image/*,video/*" senza audio apre la galleria su iOS/Android -->
+                <input type="file" id="file-input-all" multiple accept="image/*,video/*,audio/*" style="display:none"
+                    onchange="handleFiles(event)">
+                <input type="file" id="file-input-video" multiple accept="video/*" style="display:none"
+                    onchange="handleFiles(event)">
+                <input type="file" id="file-input-image" multiple accept="image/*" style="display:none"
+                    onchange="handleFiles(event)">
+                <input type="file" id="file-input-audio" multiple accept="audio/*" style="display:none"
+                    onchange="handleFiles(event)">
+                <!-- Alias per compatibilità con codice esistente -->
+                <input type="file" id="file-input" multiple accept="image/*,video/*,audio/*" style="display:none"
+                    onchange="handleFiles(event)">
+
+                <!-- Bottoni rapidi per mobile -->
+                <div id="mobile-import-btns" style="display:flex;gap:5px;margin-top:8px;flex-wrap:wrap">
+                    <button class="top-btn" style="flex:1;justify-content:center;min-width:60px"
+                        onclick="document.getElementById('file-input-video').click()">🎬 Video</button>
+                    <button class="top-btn" style="flex:1;justify-content:center;min-width:60px"
+                        onclick="document.getElementById('file-input-image').click()">🖼 Foto</button>
+                    <button class="top-btn" style="flex:1;justify-content:center;min-width:60px"
+                        onclick="document.getElementById('file-input-audio').click()">🎵 Audio</button>
                 </div>
                 <div class="media-grid" id="media-grid"></div>
             </div>
