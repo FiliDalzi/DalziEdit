@@ -2245,25 +2245,28 @@
                     <div class="ps">
                         <div class="ps-title" id="mask-type-label">Maschera</div>
                         <div class="pr"><span class="pl">Centro X</span><input type="range" class="pslider" min="0"
-                                max="1" step="0.01" value="0.5" id="mk-x" oninput="updateMask()"><span id="mk-x-v"
+                                max="1" step="0.01" value="0.5" id="mk-x" oninput="updateMask()"
+                                onpointerup="commitProp()"><span id="mk-x-v"
                                 style="font-size:10px;color:var(--text3);width:28px;text-align:right">50%</span></div>
                         <div class="pr"><span class="pl">Centro Y</span><input type="range" class="pslider" min="0"
-                                max="1" step="0.01" value="0.5" id="mk-y" oninput="updateMask()"><span id="mk-y-v"
+                                max="1" step="0.01" value="0.5" id="mk-y" oninput="updateMask()"
+                                onpointerup="commitProp()"><span id="mk-y-v"
                                 style="font-size:10px;color:var(--text3);width:28px;text-align:right">50%</span></div>
                         <div class="pr" id="mk-w-row"><span class="pl">Larghezza</span><input type="range"
                                 class="pslider" min="0.05" max="1" step="0.01" value="0.5" id="mk-w"
-                                oninput="updateMask()"><span id="mk-w-v"
+                                oninput="updateMask()" onpointerup="commitProp()"><span id="mk-w-v"
                                 style="font-size:10px;color:var(--text3);width:28px;text-align:right">50%</span></div>
                         <div class="pr" id="mk-h-row"><span class="pl">Altezza</span><input type="range" class="pslider"
-                                min="0.05" max="1" step="0.01" value="0.4" id="mk-h" oninput="updateMask()"><span
-                                id="mk-h-v"
+                                min="0.05" max="1" step="0.01" value="0.4" id="mk-h" oninput="updateMask()"
+                                onpointerup="commitProp()"><span id="mk-h-v"
                                 style="font-size:10px;color:var(--text3);width:28px;text-align:right">40%</span></div>
                         <div class="pr"><span class="pl">Angolo</span><input type="range" class="pslider" min="0"
-                                max="360" step="1" value="0" id="mk-angle" oninput="updateMask()"><span id="mk-angle-v"
+                                max="360" step="1" value="0" id="mk-angle" oninput="updateMask()"
+                                onpointerup="commitProp()"><span id="mk-angle-v"
                                 style="font-size:10px;color:var(--text3);width:28px;text-align:right">0°</span></div>
                         <div class="pr"><span class="pl">Morbidezza</span><input type="range" class="pslider" min="0"
-                                max="0.4" step="0.01" value="0.05" id="mk-feather" oninput="updateMask()"><span
-                                id="mk-feather-v"
+                                max="0.4" step="0.01" value="0.05" id="mk-feather" oninput="updateMask()"
+                                onpointerup="commitProp()"><span id="mk-feather-v"
                                 style="font-size:10px;color:var(--text3);width:28px;text-align:right">5%</span></div>
                         <div class="pr"><span class="pl">Inverti</span>
                             <input type="checkbox" id="mk-invert" onchange="updateMask()"
@@ -2329,21 +2332,24 @@
                 <div id="color-controls">
                     <div class="ps-title" style="margin:0 0 6px">Regolazioni</div>
                     <div class="pr"><span class="pl">Luminosità</span><input type="range" class="pslider" min="0"
-                            max="2" step="0.05" value="1" id="cg-brightness" oninput="applyColorGrade()"><span
-                            id="cg-brightness-v"
+                            max="2" step="0.05" value="1" id="cg-brightness" oninput="applyColorGrade()"
+                            onpointerup="commitProp()"><span id="cg-brightness-v"
                             style="font-size:10px;color:var(--text3);width:28px;text-align:right">1.0</span></div>
                     <div class="pr"><span class="pl">Contrasto</span><input type="range" class="pslider" min="0" max="3"
-                            step="0.05" value="1" id="cg-contrast" oninput="applyColorGrade()"><span id="cg-contrast-v"
+                            step="0.05" value="1" id="cg-contrast" oninput="applyColorGrade()"
+                            onpointerup="commitProp()"><span id="cg-contrast-v"
                             style="font-size:10px;color:var(--text3);width:28px;text-align:right">1.0</span></div>
                     <div class="pr"><span class="pl">Saturaz.</span><input type="range" class="pslider" min="0" max="3"
-                            step="0.05" value="1" id="cg-saturation" oninput="applyColorGrade()"><span
-                            id="cg-saturation-v"
+                            step="0.05" value="1" id="cg-saturation" oninput="applyColorGrade()"
+                            onpointerup="commitProp()"><span id="cg-saturation-v"
                             style="font-size:10px;color:var(--text3);width:28px;text-align:right">1.0</span></div>
                     <div class="pr"><span class="pl">Temp. (°)</span><input type="range" class="pslider" min="-180"
-                            max="180" step="5" value="0" id="cg-hue" oninput="applyColorGrade()"><span id="cg-hue-v"
+                            max="180" step="5" value="0" id="cg-hue" oninput="applyColorGrade()"
+                            onpointerup="commitProp()"><span id="cg-hue-v"
                             style="font-size:10px;color:var(--text3);width:28px;text-align:right">0°</span></div>
                     <div class="pr"><span class="pl">Blur</span><input type="range" class="pslider" min="0" max="10"
-                            step="0.5" value="0" id="cg-blur" oninput="applyColorGrade()"><span id="cg-blur-v"
+                            step="0.5" value="0" id="cg-blur" oninput="applyColorGrade()"
+                            onpointerup="commitProp()"><span id="cg-blur-v"
                             style="font-size:10px;color:var(--text3);width:28px;text-align:right">0px</span></div>
                     <div class="ps-title" style="margin:10px 0 6px">LUT Cinematiche</div>
                     <div class="fx-grid" id="lut-grid"></div>
@@ -2616,7 +2622,7 @@
             renderCanvas();
             updateTimeDisplay();
             document.addEventListener('keydown', handleKeyboard);
-            pushHistory();
+            // NON pushHistory() all'init — il primo snapshot viene da loadAutosave o dalla prima azione utente
             // Carica prima la libreria media (file importati in sessioni precedenti)
             await loadMediaLibrary();
             const saved = await loadAutosave();
@@ -2943,7 +2949,7 @@
             ['brightness', 'contrast', 'saturation'].forEach(id => { document.getElementById('cg-' + id).value = 1; document.getElementById('cg-' + id + '-v').textContent = '1.0'; });
             document.getElementById('cg-hue').value = 0; document.getElementById('cg-hue-v').textContent = '0°';
             document.getElementById('cg-blur').value = 0; document.getElementById('cg-blur-v').textContent = '0px';
-            renderCanvas(); setUnsaved(); toast('Color grade resettato');
+            pushHistory(); renderCanvas(); setUnsaved(); toast('Color grade resettato');
         }
 
         // ═══════════════════════════════════════════════════════
@@ -3174,7 +3180,7 @@
     <div class="pr"><span class="pl">Inizio</span><input class="pi" type="number" step="0.1" value="${clip.start.toFixed(2)}" onchange="upProp('start',parseFloat(this.value))" style="user-select:text"></div>
     <div class="pr"><span class="pl">Durata</span><input class="pi" type="number" step="0.1" min="0.1" value="${clip.duration.toFixed(2)}" onchange="upProp('duration',parseFloat(this.value))" style="user-select:text"></div>
     <div class="pr"><span class="pl">Velocità</span>
-      <input type="range" class="pslider" min="0.1" max="4" step="0.05" value="${clip.speed ?? 1}" oninput="upPropLive('speed',parseFloat(this.value))">
+      <input type="range" class="pslider" min="0.1" max="4" step="0.05" value="${clip.speed ?? 1}" oninput="upPropLive('speed',parseFloat(this.value))" onpointerup="commitProp()">
       <span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${(clip.speed ?? 1).toFixed(2)}×</span>
     </div>
   </div>`;
@@ -3182,8 +3188,8 @@
                 h += `
   <div class="ps">
     <div class="ps-title">🎨 Visuale</div>
-    <div class="pr"><span class="pl">Opacità</span><input type="range" class="pslider" min="0" max="1" step="0.01" value="${clip.opacity ?? 1}" oninput="upPropLive('opacity',parseFloat(this.value))"></div>
-    <div class="pr"><span class="pl">Ruota</span><input type="range" class="pslider" min="-180" max="180" step="1" value="${clip.rotate ?? 0}" oninput="upPropLive('rotate',parseFloat(this.value))"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${clip.rotate ?? 0}°</span></div>
+    <div class="pr"><span class="pl">Opacità</span><input type="range" class="pslider" min="0" max="1" step="0.01" value="${clip.opacity ?? 1}" oninput="upPropLive('opacity',parseFloat(this.value))" onpointerup="commitProp()"></div>
+    <div class="pr"><span class="pl">Ruota</span><input type="range" class="pslider" min="-180" max="180" step="1" value="${clip.rotate ?? 0}" oninput="upPropLive('rotate',parseFloat(this.value))" onpointerup="commitProp()"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${clip.rotate ?? 0}°</span></div>
     <div class="pr"><span class="pl">Filtro CSS</span>
       <select class="pi" onchange="upProp('filter',this.value)" style="font-family:inherit;padding:2px">
         ${['none', 'grayscale(100%)', 'sepia(100%)', 'blur(4px)', 'brightness(1.4)', 'contrast(1.5)', 'saturate(2)', 'invert(100%)'].map(f => `<option value="${f}" ${clip.filter === f ? 'selected' : ''}>${f === 'none' ? 'Nessuno' : f}</option>`).join('')}
@@ -3195,17 +3201,17 @@
                 h += `
   <div class="ps">
     <div class="ps-title">📐 Trasforma</div>
-    <div class="pr"><span class="pl">Scala X</span><input type="range" class="pslider" min="0.1" max="3" step="0.05" value="${clip.scaleX ?? 1}" oninput="upPropLive('scaleX',parseFloat(this.value))"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${(clip.scaleX ?? 1).toFixed(1)}</span></div>
-    <div class="pr"><span class="pl">Scala Y</span><input type="range" class="pslider" min="0.1" max="3" step="0.05" value="${clip.scaleY ?? 1}" oninput="upPropLive('scaleY',parseFloat(this.value))"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${(clip.scaleY ?? 1).toFixed(1)}</span></div>
+    <div class="pr"><span class="pl">Scala X</span><input type="range" class="pslider" min="0.1" max="3" step="0.05" value="${clip.scaleX ?? 1}" oninput="upPropLive('scaleX',parseFloat(this.value))" onpointerup="commitProp()"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${(clip.scaleX ?? 1).toFixed(1)}</span></div>
+    <div class="pr"><span class="pl">Scala Y</span><input type="range" class="pslider" min="0.1" max="3" step="0.05" value="${clip.scaleY ?? 1}" oninput="upPropLive('scaleY',parseFloat(this.value))" onpointerup="commitProp()"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${(clip.scaleY ?? 1).toFixed(1)}</span></div>
   </div>`;
             }
             if (clip.type === 'overlay') {
                 h += `
   <div class="ps">
     <div class="ps-title">⧉ Overlay / PiP</div>
-    <div class="pr"><span class="pl">Pos. X</span><input type="range" class="pslider" min="0" max="1" step="0.01" value="${clip.overlayX ?? 0.75}" oninput="upPropLive('overlayX',parseFloat(this.value))"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${((clip.overlayX ?? 0.75) * 100).toFixed(0)}%</span></div>
-    <div class="pr"><span class="pl">Pos. Y</span><input type="range" class="pslider" min="0" max="1" step="0.01" value="${clip.overlayY ?? 0.75}" oninput="upPropLive('overlayY',parseFloat(this.value))"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${((clip.overlayY ?? 0.75) * 100).toFixed(0)}%</span></div>
-    <div class="pr"><span class="pl">Dim.</span><input type="range" class="pslider" min="0.05" max="1" step="0.02" value="${clip.overlayScale ?? 0.35}" oninput="upPropLive('overlayScale',parseFloat(this.value))"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${Math.round((clip.overlayScale ?? 0.35) * 100)}%</span></div>
+    <div class="pr"><span class="pl">Pos. X</span><input type="range" class="pslider" min="0" max="1" step="0.01" value="${clip.overlayX ?? 0.75}" oninput="upPropLive('overlayX',parseFloat(this.value))" onpointerup="commitProp()"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${((clip.overlayX ?? 0.75) * 100).toFixed(0)}%</span></div>
+    <div class="pr"><span class="pl">Pos. Y</span><input type="range" class="pslider" min="0" max="1" step="0.01" value="${clip.overlayY ?? 0.75}" oninput="upPropLive('overlayY',parseFloat(this.value))" onpointerup="commitProp()"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${((clip.overlayY ?? 0.75) * 100).toFixed(0)}%</span></div>
+    <div class="pr"><span class="pl">Dim.</span><input type="range" class="pslider" min="0.05" max="1" step="0.02" value="${clip.overlayScale ?? 0.35}" oninput="upPropLive('overlayScale',parseFloat(this.value))" onpointerup="commitProp()"><span style="font-size:10px;color:var(--text3);width:28px;text-align:right">${Math.round((clip.overlayScale ?? 0.35) * 100)}%</span></div>
     <p style="font-size:9px;color:var(--text3);margin-top:4px">Trascina sull'anteprima per spostare</p>
   </div>`;
             }
@@ -3216,8 +3222,8 @@
     <div class="pr"><span class="pl">Testo</span><input class="pi" value="${clip.text || ''}" onchange="upProp('text',this.value)" style="user-select:text"></div>
     <div class="pr"><span class="pl">Dim.</span><input class="pi" type="number" value="${clip.fontSize || 60}" onchange="upProp('fontSize',parseInt(this.value))" style="user-select:text"></div>
     <div class="pr"><span class="pl">Peso</span><input class="pi" type="number" step="100" min="100" max="900" value="${clip.fontWeight || 700}" onchange="upProp('fontWeight',parseInt(this.value))" style="user-select:text"></div>
-    <div class="pr"><span class="pl">Colore</span><div class="pcol"><input type="color" value="${clip.color || '#ffffff'}" oninput="upPropLive('color',this.value)"></div>
-    <span class="pl" style="width:auto;margin-left:4px">Bordo</span><div class="pcol"><input type="color" value="${clip.outlineColor || '#000000'}" oninput="upPropLive('outlineColor',this.value)"></div></div>
+    <div class="pr"><span class="pl">Colore</span><div class="pcol"><input type="color" value="${clip.color || '#ffffff'}" oninput="upPropLive('color',this.value)" onchange="commitProp()"></div>
+    <span class="pl" style="width:auto;margin-left:4px">Bordo</span><div class="pcol"><input type="color" value="${clip.outlineColor || '#000000'}" oninput="upPropLive('outlineColor',this.value)" onchange="commitProp()"></div></div>
     <div class="pr"><span class="pl">X (0-1)</span><input class="pi" type="number" step="0.01" min="0" max="1" value="${(clip.x ?? 0.5).toFixed(2)}" onchange="upProp('x',parseFloat(this.value))" style="user-select:text"></div>
     <div class="pr"><span class="pl">Y (0-1)</span><input class="pi" type="number" step="0.01" min="0" max="1" value="${(clip.y ?? 0.5).toFixed(2)}" onchange="upProp('y',parseFloat(this.value))" style="user-select:text"></div>
     <div class="pr"><span class="pl">Animaz.</span>
@@ -3231,7 +3237,7 @@
                 h += `
   <div class="ps">
     <div class="ps-title">🎵 Audio</div>
-    <div class="pr"><span class="pl">Volume</span><input type="range" class="pslider" min="0" max="2" step="0.05" value="${clip.volume ?? 1}" oninput="upPropLive('volume',parseFloat(this.value))"></div>
+    <div class="pr"><span class="pl">Volume</span><input type="range" class="pslider" min="0" max="2" step="0.05" value="${clip.volume ?? 1}" oninput="upPropLive('volume',parseFloat(this.value))" onpointerup="commitProp()"></div>
   </div>`;
             }
             h += `
@@ -3727,24 +3733,49 @@
         // ═══════════════════════════════════════════════════════
         function pushHistory() {
             const snap = JSON.stringify(state.tracks.map(t => ({ ...t, clips: t.clips.map(c => ({ ...c })) })));
+            // Non aggiungere snapshot identico all'ultimo — evita stati duplicati
+            if (state.history.length > 0 && state.history[state.historyIndex] === snap) return;
             state.history = state.history.slice(0, state.historyIndex + 1);
             state.history.push(snap);
-            if (state.history.length > 80) state.history.shift();
+            if (state.history.length > 60) state.history.shift();
             state.historyIndex = state.history.length - 1;
+        }
+
+        // Chiamato al pointerup degli slider — salva UNO snapshot dopo il drag
+        function commitProp() {
+            pushHistory();
+            setUnsaved();
         }
         function undo() {
             if (state.historyIndex <= 0) { toast('Niente da annullare'); return; }
+            const prevSelId = state.selectedClip?.id;
             state.historyIndex--;
             state.tracks = JSON.parse(state.history[state.historyIndex]);
-            state.selectedClip = null;
+            // Prova a riaggancia il clip selezionato (stesso id) dopo il ripristino
+            state.selectedClip = null; state.selectedTrack = null;
+            if (prevSelId) {
+                for (const t of state.tracks) {
+                    const c = t.clips.find(x => x.id === prevSelId);
+                    if (c) { state.selectedClip = c; state.selectedTrack = t; break; }
+                }
+            }
             updateDuration(); renderTracks(); renderClipProps(); renderCanvas();
+            toast('↩ Annullato');
         }
         function redo() {
             if (state.historyIndex >= state.history.length - 1) { toast('Niente da ripetere'); return; }
+            const prevSelId = state.selectedClip?.id;
             state.historyIndex++;
             state.tracks = JSON.parse(state.history[state.historyIndex]);
-            state.selectedClip = null;
+            state.selectedClip = null; state.selectedTrack = null;
+            if (prevSelId) {
+                for (const t of state.tracks) {
+                    const c = t.clips.find(x => x.id === prevSelId);
+                    if (c) { state.selectedClip = c; state.selectedTrack = t; break; }
+                }
+            }
             updateDuration(); renderTracks(); renderClipProps(); renderCanvas();
+            toast('↪ Ripristinato');
         }
 
         // ═══════════════════════════════════════════════════════
@@ -5569,7 +5600,7 @@
   </div>
   <div class="pr" style="margin-bottom:10px"><span class="pl">Opacità</span>
     <input type="range" class="pslider" min="0" max="1" step="0.05" value="${clip.opacity ?? 1}"
-      oninput="upPropLive('opacity',parseFloat(this.value))">
+      oninput="upPropLive('opacity',parseFloat(this.value))" onpointerup="commitProp()">
   </div>
   <div class="pr" style="margin-bottom:10px"><span class="pl">Ruota</span>
     <input type="range" class="pslider" min="-180" max="180" step="1" value="${clip.rotate ?? 0}"
