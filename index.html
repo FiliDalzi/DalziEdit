@@ -768,12 +768,16 @@
 
         /* TIMELINE */
         #timeline-area {
-            height: 200px;
+            height: 220px;
+            min-height: 160px;
+            max-height: 50vh;
+            resize: vertical;
             background: var(--bg2);
             border-top: 1px solid var(--border);
             display: flex;
             flex-direction: column;
-            flex-shrink: 0
+            flex-shrink: 0;
+            overflow: hidden
         }
 
         #tl-toolbar {
@@ -823,7 +827,7 @@
         #tl-scroll {
             flex: 1;
             overflow-x: auto;
-            overflow-y: hidden;
+            overflow-y: auto;
             display: flex;
             position: relative
         }
@@ -846,6 +850,7 @@
             left: 0;
             z-index: 10;
             width: 88px;
+            min-width: 88px;
             background: var(--bg2);
             border-right: 1px solid var(--border);
             flex-shrink: 0;
@@ -902,7 +907,8 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            min-width: 0
+            min-width: 0;
+            overflow: visible
         }
 
         #ruler {
@@ -917,7 +923,8 @@
         #tracks-area {
             flex: 1;
             position: relative;
-            overflow: hidden
+            overflow: visible;
+            min-height: 100%
         }
 
         .track-row {
@@ -1363,6 +1370,186 @@
             color: #fff
         }
 
+
+        /* ── SPLIT SCREEN ── */
+        .split-preset {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 6px;
+            cursor: pointer;
+            transition: all .15s;
+            aspect-ratio: 16/9;
+            width: 100%
+        }
+
+        .split-preset:hover {
+            border-color: var(--accent);
+            background: var(--bg4)
+        }
+
+        .split-preset.active {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px var(--accent)40
+        }
+
+        .split-cell {
+            background: var(--accent)30;
+            border: 1px solid var(--accent)60;
+            border-radius: 3px;
+            flex: 1;
+            min-height: 24px
+        }
+
+        .split-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            margin-bottom: 10px
+        }
+
+        /* ── TITOLI ANIMATI ── */
+        .title-tpl {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            padding: 8px;
+            cursor: pointer;
+            transition: all .15s;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .title-tpl:hover {
+            border-color: var(--accent2);
+            background: var(--bg4)
+        }
+
+        .title-tpl-thumb {
+            width: 52px;
+            height: 30px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 9px;
+            flex-shrink: 0;
+            overflow: hidden;
+            position: relative
+        }
+
+        .title-tpl-info {
+            flex: 1;
+            min-width: 0
+        }
+
+        .title-tpl-name {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis
+        }
+
+        .title-tpl-desc {
+            font-size: 9px;
+            color: var(--text3);
+            margin-top: 1px
+        }
+
+        /* ── AUDIO EQ ── */
+        .eq-bar-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            flex: 1
+        }
+
+        .eq-bar-wrap input[type=range] {
+            writing-mode: vertical-lr;
+            direction: rtl;
+            -webkit-appearance: slider-vertical;
+            appearance: slider-vertical;
+            width: 20px;
+            height: 80px;
+            accent-color: var(--accent3);
+            cursor: pointer
+        }
+
+        .eq-label {
+            font-size: 8px;
+            color: var(--text3);
+            font-family: 'JetBrains Mono', monospace;
+            text-align: center
+        }
+
+        .eq-grid {
+            display: flex;
+            gap: 4px;
+            margin: 8px 0;
+            justify-content: space-between
+        }
+
+        /* ── MASCHERE ── */
+        .mask-btn {
+            flex: 1;
+            min-width: 60px;
+            height: 52px;
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            background: var(--bg3);
+            color: var(--text2);
+            font-size: 9px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .3px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            cursor: pointer;
+            transition: all .15s
+        }
+
+        .mask-btn svg {
+            width: 22px;
+            height: 22px
+        }
+
+        .mask-btn:hover,
+        .mask-btn.active {
+            border-color: var(--accent3);
+            color: var(--accent3);
+            background: var(--bg4)
+        }
+
+        #freehand-canvas {
+            cursor: crosshair;
+            touch-action: none
+        }
+
+        .mask-handle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border: 2px solid var(--accent3);
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 30;
+            transform: translate(-50%, -50%)
+        }
+
         /* ── CHROMA KEY ── */
         .ck-preview {
             width: 100%;
@@ -1684,6 +1871,37 @@
                     <path d="M2 12h20" />
                 </svg>Colore
             </button>
+            <button class="sbtn" id="btn-split" onclick="switchPanel('split')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="9" height="18" rx="1" />
+                    <rect x="13" y="3" width="9" height="18" rx="1" />
+                </svg>Split
+            </button>
+            <button class="sbtn" id="btn-titles" onclick="switchPanel('titles')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 6h16M4 12h10M4 18h6" />
+                    <rect x="14" y="14" width="8" height="6" rx="1" />
+                </svg>Titoli
+            </button>
+            <button class="sbtn" id="btn-eq" onclick="switchPanel('eq')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="4" y1="21" x2="4" y2="14" />
+                    <line x1="4" y1="10" x2="4" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="12" />
+                    <line x1="12" y1="8" x2="12" y2="3" />
+                    <line x1="20" y1="21" x2="20" y2="16" />
+                    <line x1="20" y1="12" x2="20" y2="3" />
+                    <line x1="1" y1="14" x2="7" y2="14" />
+                    <line x1="9" y1="8" x2="15" y2="8" />
+                    <line x1="17" y1="16" x2="23" y2="16" />
+                </svg>EQ
+            </button>
+            <button class="sbtn" id="btn-mask" onclick="switchPanel('mask')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="8" />
+                    <path d="M12 4v16M4 12h16" />
+                </svg>Maschera
+            </button>
             <button class="sbtn" id="btn-chroma" onclick="switchPanel('chroma')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="2" y="3" width="20" height="14" rx="2" />
@@ -1759,6 +1977,250 @@
                 <p style="font-size:10px;color:var(--text3);margin-bottom:8px">Applica transizione al clip selezionato
                 </p>
                 <div class="fx-grid" id="trans-grid"></div>
+            </div>
+            <!-- SPLIT SCREEN TAB -->
+            <div class="tab" id="split-tab">
+                <p style="font-size:10px;color:var(--text3);margin-bottom:8px">Affianca 2–4 video sullo schermo</p>
+                <div class="split-grid">
+                    <div onclick="setSplitLayout('h2')" id="spl-h2" class="split-preset" title="2 video orizzontali">
+                        <div class="split-cell" style="max-width:48%"></div>
+                        <div class="split-cell" style="max-width:48%"></div>
+                    </div>
+                    <div onclick="setSplitLayout('v2')" id="spl-v2" class="split-preset" title="2 video verticali"
+                        style="flex-direction:column">
+                        <div class="split-cell" style="min-height:10px;width:100%"></div>
+                        <div class="split-cell" style="min-height:10px;width:100%"></div>
+                    </div>
+                    <div onclick="setSplitLayout('q4')" id="spl-q4" class="split-preset" title="4 video in griglia"
+                        style="flex-wrap:wrap;gap:2px">
+                        <div class="split-cell" style="width:46%;min-height:10px"></div>
+                        <div class="split-cell" style="width:46%;min-height:10px"></div>
+                        <div class="split-cell" style="width:46%;min-height:10px"></div>
+                        <div class="split-cell" style="width:46%;min-height:10px"></div>
+                    </div>
+                    <div onclick="setSplitLayout('t3')" id="spl-t3" class="split-preset"
+                        title="3 video (grande+2 piccoli)" style="flex-wrap:wrap;gap:2px">
+                        <div class="split-cell" style="width:56%;min-height:22px"></div>
+                        <div style="display:flex;flex-direction:column;gap:2px;flex:1">
+                            <div class="split-cell" style="min-height:10px"></div>
+                            <div class="split-cell" style="min-height:10px"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ps" id="split-controls" style="display:none">
+                    <div class="ps-title" id="split-layout-label">Layout</div>
+                    <div class="pr"><span class="pl">Bordo</span>
+                        <input type="range" class="pslider" min="0" max="30" step="1" value="4" id="split-gap"
+                            oninput="updateSplitGap();document.getElementById('split-gap-v').textContent=this.value+'px'">
+                        <span id="split-gap-v"
+                            style="font-size:10px;color:var(--text3);width:28px;text-align:right">4px</span>
+                    </div>
+                    <div class="pr"><span class="pl">Colore bordo</span>
+                        <div class="pcol" style="width:28px;height:28px"><input type="color" id="split-border-color"
+                                value="#000000" oninput="renderCanvas()"></div>
+                    </div>
+                    <div class="pr"><span class="pl">Arrotond.</span>
+                        <input type="range" class="pslider" min="0" max="40" step="1" value="0" id="split-radius"
+                            oninput="renderCanvas();document.getElementById('split-radius-v').textContent=this.value+'px'">
+                        <span id="split-radius-v"
+                            style="font-size:10px;color:var(--text3);width:28px;text-align:right">0px</span>
+                    </div>
+                    <p style="font-size:9px;color:var(--text3);margin-top:4px;line-height:1.5">Trascina i clip video
+                        dalla Media Pool nelle celle. Il layout usa automaticamente le tracce Overlay 1–3.</p>
+                    <button class="tbtn danger" style="width:100%;justify-content:center;margin-top:6px"
+                        onclick="removeSplitLayout()">✕ Rimuovi Split Screen</button>
+                </div>
+            </div>
+            <!-- TITOLI ANIMATI TAB -->
+            <div class="tab" id="titles-tab">
+                <p style="font-size:10px;color:var(--text3);margin-bottom:8px">Template titoli stile iMovie</p>
+                <div id="title-templates-list"></div>
+            </div>
+            <!-- EQUALIZZATORE + FADE TAB -->
+            <div class="tab" id="eq-tab">
+                <p style="font-size:10px;color:var(--text3);margin-bottom:8px">Equalizzatore e fade audio sul clip
+                    selezionato</p>
+                <div class="ps">
+                    <div class="ps-title">🎚 Equalizzatore (simulato)</div>
+                    <div class="eq-grid" id="eq-bars">
+                        <!-- generato da JS -->
+                    </div>
+                    <div style="display:flex;gap:4px;margin-top:4px">
+                        <button class="tbtn" style="flex:1;justify-content:center;font-size:9px"
+                            onclick="eqPreset('flat')">Flat</button>
+                        <button class="tbtn" style="flex:1;justify-content:center;font-size:9px"
+                            onclick="eqPreset('bass')">Bass+</button>
+                        <button class="tbtn" style="flex:1;justify-content:center;font-size:9px"
+                            onclick="eqPreset('treble')">Treble+</button>
+                        <button class="tbtn" style="flex:1;justify-content:center;font-size:9px"
+                            onclick="eqPreset('vocal')">Voce</button>
+                        <button class="tbtn" style="flex:1;justify-content:center;font-size:9px"
+                            onclick="eqPreset('cinematic')">Cinema</button>
+                    </div>
+                </div>
+                <div class="ps" style="margin-top:8px">
+                    <div class="ps-title">🔊 Fade Audio</div>
+                    <div class="pr"><span class="pl">Fade in</span>
+                        <input type="range" class="pslider" min="0" max="5" step="0.1" value="0" id="eq-fadein"
+                            oninput="applyAudioFade();document.getElementById('eq-fadein-v').textContent=parseFloat(this.value).toFixed(1)+'s'">
+                        <span id="eq-fadein-v"
+                            style="font-size:10px;color:var(--text3);width:28px;text-align:right">0s</span>
+                    </div>
+                    <div class="pr"><span class="pl">Fade out</span>
+                        <input type="range" class="pslider" min="0" max="5" step="0.1" value="0" id="eq-fadeout"
+                            oninput="applyAudioFade();document.getElementById('eq-fadeout-v').textContent=parseFloat(this.value).toFixed(1)+'s'">
+                        <span id="eq-fadeout-v"
+                            style="font-size:10px;color:var(--text3);width:28px;text-align:right">0s</span>
+                    </div>
+                    <div class="pr"><span class="pl">Volume</span>
+                        <input type="range" class="pslider" min="0" max="2" step="0.05" value="1" id="eq-volume"
+                            oninput="applyAudioFade();document.getElementById('eq-volume-v').textContent=Math.round(this.value*100)+'%'">
+                        <span id="eq-volume-v"
+                            style="font-size:10px;color:var(--text3);width:28px;text-align:right">100%</span>
+                    </div>
+                </div>
+                <div class="ps" style="margin-top:8px">
+                    <div class="ps-title">🔉 Stabilizzazione audio</div>
+                    <div class="pr"><span class="pl">Normalizza</span>
+                        <input type="checkbox" id="eq-normalize" onchange="applyAudioFade()"
+                            style="width:16px;height:16px;accent-color:var(--accent3);cursor:pointer">
+                    </div>
+                    <div class="pr"><span class="pl">Noise gate</span>
+                        <input type="range" class="pslider" min="0" max="100" step="1" value="0" id="eq-gate"
+                            oninput="applyAudioFade();document.getElementById('eq-gate-v').textContent=this.value+'%'">
+                        <span id="eq-gate-v"
+                            style="font-size:10px;color:var(--text3);width:28px;text-align:right">0%</span>
+                    </div>
+                </div>
+                <div class="ps" style="margin-top:8px">
+                    <div class="ps-title">🎬 Stabilizzazione video (canvas)</div>
+                    <div class="pr"><span class="pl">Attiva</span>
+                        <input type="checkbox" id="stab-enable" onchange="toggleStabilize()"
+                            style="width:16px;height:16px;accent-color:var(--accent);cursor:pointer">
+                    </div>
+                    <div class="pr"><span class="pl">Intensità</span>
+                        <input type="range" class="pslider" min="1" max="20" step="1" value="8" id="stab-strength"
+                            oninput="document.getElementById('stab-strength-v').textContent=this.value">
+                        <span id="stab-strength-v"
+                            style="font-size:10px;color:var(--text3);width:28px;text-align:right">8</span>
+                    </div>
+                    <p style="font-size:9px;color:var(--text3);margin-top:4px;line-height:1.5">Zoom leggero + smoothing
+                        del movimento frame per frame. Riduce le vibrazioni della camera a mano.</p>
+                </div>
+            </div>
+            <!-- MASK TAB -->
+            <div class="tab" id="mask-tab">
+                <p style="font-size:10px;color:var(--text3);margin-bottom:8px">Maschera sul clip selezionato</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px">
+                    <button class="mask-btn" id="mbtn-circle" onclick="setMaskType('circle')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="9" />
+                        </svg>Cerchio
+                    </button>
+                    <button class="mask-btn" id="mbtn-ellipse" onclick="setMaskType('ellipse')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <ellipse cx="12" cy="12" rx="10" ry="6" />
+                        </svg>Ellisse
+                    </button>
+                    <button class="mask-btn" id="mbtn-rect" onclick="setMaskType('rect')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="6" width="18" height="12" rx="1" />
+                        </svg>Rettangolo
+                    </button>
+                    <button class="mask-btn" id="mbtn-linear" onclick="setMaskType('linear')">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <defs>
+                                <linearGradient id="lg1" x1="0" y1="0" x2="1" y2="0">
+                                    <stop offset="0%" stop-color="white" />
+                                    <stop offset="100%" stop-color="black" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="2" y="4" width="20" height="16" fill="url(#lg1)" opacity=".5" rx="2" />
+                            <line x1="12" y1="4" x2="12" y2="20" stroke-dasharray="3,2" />
+                        </svg>Gradiente
+                    </button>
+                    <button class="mask-btn" id="mbtn-freehand" onclick="setMaskType('freehand')"
+                        style="grid-column:span 2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 17c2-2 4-4 6-3s3 3 5 2 4-3 7-4" />
+                            <path d="M3 12c1-1 2-2 3-1s2 2 4 1 3-2 5-1 3 2 5 1" />
+                        </svg>✏ Forma libera (pennello)
+                    </button>
+                </div>
+
+                <!-- Canvas disegno maschera pennello -->
+                <div id="freehand-area" style="display:none;margin-bottom:10px">
+                    <p style="font-size:10px;color:var(--text3);margin-bottom:5px">Disegna la maschera sull'anteprima
+                        del clip:</p>
+                    <div
+                        style="position:relative;background:#000;border-radius:6px;overflow:hidden;border:1px solid var(--border2)">
+                        <canvas id="freehand-canvas"
+                            style="width:100%;display:block;cursor:crosshair;touch-action:none"></canvas>
+                        <div
+                            style="position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.7);padding:4px 6px;display:flex;gap:5px;align-items:center">
+                            <span style="font-size:9px;color:var(--text3)">Dim.:</span>
+                            <input type="range" min="5" max="60" value="20" id="fh-size"
+                                style="flex:1;height:3px;accent-color:var(--accent3)">
+                            <button class="tbtn" style="font-size:9px;height:20px;padding:0 6px" onclick="fhClear()">🗑
+                                Cancella</button>
+                            <button class="tbtn"
+                                style="font-size:9px;height:20px;padding:0 6px;color:var(--accent3);border-color:var(--accent3)40"
+                                onclick="fhUndo()">↩</button>
+                        </div>
+                    </div>
+                    <div class="pr" style="margin-top:6px"><span class="pl">Morbidezza</span>
+                        <input type="range" class="pslider" min="0" max="20" step="1" value="4" id="fh-feather"
+                            oninput="fhUpdateFeather();document.getElementById('fh-feather-v').textContent=this.value+'px'">
+                        <span id="fh-feather-v"
+                            style="font-size:10px;color:var(--text3);width:28px;text-align:right">4px</span>
+                    </div>
+                    <div class="pr"><span class="pl">Inverti</span>
+                        <input type="checkbox" id="fh-invert" onchange="fhApply()"
+                            style="width:16px;height:16px;accent-color:var(--accent3);cursor:pointer">
+                    </div>
+                    <button class="tbtn primary"
+                        style="width:100%;justify-content:center;margin-top:6px;background:var(--accent3);border-color:var(--accent3)"
+                        onclick="fhApply()">✅ Applica forma libera</button>
+                    <button class="tbtn" style="width:100%;justify-content:center;margin-top:4px"
+                        onclick="removeMask()">✕ Rimuovi</button>
+                </div>
+                <div id="mask-controls" style="display:none">
+                    <div class="ps">
+                        <div class="ps-title" id="mask-type-label">Maschera</div>
+                        <div class="pr"><span class="pl">Centro X</span><input type="range" class="pslider" min="0"
+                                max="1" step="0.01" value="0.5" id="mk-x" oninput="updateMask()"><span id="mk-x-v"
+                                style="font-size:10px;color:var(--text3);width:28px;text-align:right">50%</span></div>
+                        <div class="pr"><span class="pl">Centro Y</span><input type="range" class="pslider" min="0"
+                                max="1" step="0.01" value="0.5" id="mk-y" oninput="updateMask()"><span id="mk-y-v"
+                                style="font-size:10px;color:var(--text3);width:28px;text-align:right">50%</span></div>
+                        <div class="pr" id="mk-w-row"><span class="pl">Larghezza</span><input type="range"
+                                class="pslider" min="0.05" max="1" step="0.01" value="0.5" id="mk-w"
+                                oninput="updateMask()"><span id="mk-w-v"
+                                style="font-size:10px;color:var(--text3);width:28px;text-align:right">50%</span></div>
+                        <div class="pr" id="mk-h-row"><span class="pl">Altezza</span><input type="range" class="pslider"
+                                min="0.05" max="1" step="0.01" value="0.4" id="mk-h" oninput="updateMask()"><span
+                                id="mk-h-v"
+                                style="font-size:10px;color:var(--text3);width:28px;text-align:right">40%</span></div>
+                        <div class="pr"><span class="pl">Angolo</span><input type="range" class="pslider" min="0"
+                                max="360" step="1" value="0" id="mk-angle" oninput="updateMask()"><span id="mk-angle-v"
+                                style="font-size:10px;color:var(--text3);width:28px;text-align:right">0°</span></div>
+                        <div class="pr"><span class="pl">Morbidezza</span><input type="range" class="pslider" min="0"
+                                max="0.4" step="0.01" value="0.05" id="mk-feather" oninput="updateMask()"><span
+                                id="mk-feather-v"
+                                style="font-size:10px;color:var(--text3);width:28px;text-align:right">5%</span></div>
+                        <div class="pr"><span class="pl">Inverti</span>
+                            <input type="checkbox" id="mk-invert" onchange="updateMask()"
+                                style="width:16px;height:16px;accent-color:var(--accent3);cursor:pointer">
+                        </div>
+                    </div>
+                    <button class="tbtn"
+                        style="width:100%;justify-content:center;margin-bottom:4px;color:var(--accent3);border-color:var(--accent3)40"
+                        onclick="applyMask()">✅ Applica Maschera</button>
+                    <button class="tbtn" style="width:100%;justify-content:center" onclick="removeMask()">✕ Rimuovi
+                        Maschera</button>
+                </div>
+                <p style="font-size:9px;color:var(--text3);margin-top:8px;line-height:1.5">Seleziona un clip video o
+                    overlay, scegli il tipo di maschera e regola. La maschera nasconde o mostra le zone del clip.</p>
             </div>
             <!-- CHROMA KEY TAB -->
             <div class="tab" id="chroma-tab">
@@ -1917,13 +2379,20 @@
 
     <!-- EXPORT MODAL -->
     <div class="modal-overlay" id="export-modal">
-        <div class="modal">
-            <h3>⬆ Esporta</h3>
+        <div class="modal" style="max-width:460px">
+            <h3>⬆ Esporta video</h3>
             <div class="form-group"><label>Formato</label>
-                <select id="ex-fmt">
-                    <option value="webm">WebM (video)</option>
-                    <option value="frames">PNG frame (primo frame)</option>
+                <select id="ex-fmt" onchange="onExFmtChange()">
+                    <option value="mp4">🎬 MP4 / H.264 (universale)</option>
+                    <option value="webm">🌐 WebM / VP9 (browser)</option>
+                    <option value="frames">🖼 PNG frame (primo frame)</option>
                 </select>
+            </div>
+            <div id="ex-mp4-note"
+                style="font-size:10px;color:var(--accent4);background:var(--bg3);border-radius:5px;padding:7px 9px;margin-bottom:8px;line-height:1.5">
+                ⚠ MP4 usa <strong>FFmpeg.wasm</strong> (~32 MB). Viene scaricato una volta sola e poi resta in cache. Il
+                rendering è <em>più lento</em> del WebM ma il file è compatibile con tutti i dispositivi (iPhone,
+                Android, social).
             </div>
             <div class="form-group"><label>Risoluzione</label>
                 <select id="ex-res">
@@ -1942,21 +2411,23 @@
             </div>
             <div class="form-group"><label>Qualità</label>
                 <select id="ex-q">
-                    <option value="high">Alta (8 Mbps)</option>
-                    <option value="med">Media (4 Mbps)</option>
-                    <option value="low">Bassa (2 Mbps)</option>
+                    <option value="high">Alta (8 Mbps / CRF 18)</option>
+                    <option value="med">Media (4 Mbps / CRF 24)</option>
+                    <option value="low">Bassa (2 Mbps / CRF 30)</option>
                 </select>
             </div>
-            <div id="export-progress">
+            <div id="export-progress" style="display:none">
                 <div id="progress-bar">
                     <div id="progress-fill"></div>
                 </div>
-                <div id="progress-text"></div>
+                <div id="progress-text" style="margin-top:4px;font-size:11px;color:var(--text2);text-align:center">
+                    Preparazione...</div>
+                <div id="progress-stage" style="font-size:10px;color:var(--text3);text-align:center;margin-top:2px">
+                </div>
             </div>
             <div class="modal-actions">
-                <button class="tbtn"
-                    onclick="document.getElementById('export-modal').classList.remove('open')">Annulla</button>
-                <button class="tbtn primary" onclick="startExport()">Esporta</button>
+                <button class="tbtn" id="ex-cancel-btn" onclick="cancelExport()">Annulla</button>
+                <button class="tbtn primary" id="ex-start-btn" onclick="startExport()">⬆ Esporta</button>
             </div>
         </div>
     </div>
@@ -2122,6 +2593,9 @@
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(id + '-tab')?.classList.add('active');
             if (id === 'chroma') setTimeout(ckPreview, 80);
+            if (id === 'titles') setTimeout(initTitleTemplates, 20);
+            if (id === 'eq') setTimeout(onSwitchEq, 20);
+            if (id === 'mask') { const c = state.selectedClip; if (c?.mask) { setMaskType(c.mask.type); } }
             if (id === 'keyframes') setTimeout(renderKfPanel, 20);
         }
 
@@ -2141,11 +2615,13 @@
                 d.onclick = () => addTextClip(p);
                 document.getElementById('text-presets').appendChild(d);
             });
-            // Effects
-            [['🌊', 'Fade In'], ['🌅', 'Fade Out'], ['⚡', 'Flash'], ['🎞', 'Pellicola'],
-            ['📺', 'VHS'], ['🌈', 'Vivido'], ['❄', 'Gelo'], ['🔥', 'Caldo'],
-            ['🎨', 'Pittura'], ['⬛', 'Vignetta'], ['🔵', 'Blur'], ['✨', 'Glow'],
-            ['😵', 'Glitch'], ['🌙', 'Notte'], ['☀', 'Soleggiato'], ['🎭', 'Neon']
+            // Effects (stile iMovie)
+            [['🌅', 'Fade In'], ['🌊', 'Fade Out'], ['🌓', 'Fade In/Out'], ['⚡', 'Flash'],
+            ['🎞', 'Pellicola'], ['📺', 'VHS'], ['🌈', 'Vivido'], ['❄', 'Gelo'],
+            ['🔥', 'Caldo'], ['🎨', 'Pittura'], ['⬛', 'Vignetta'], ['🔵', 'Blur'],
+            ['✨', 'Glow'], ['😵', 'Glitch'], ['🌙', 'Notte'], ['☀', 'Soleggiato'],
+            ['🎭', 'Neon'], ['🖤', 'B&N Drammatico'], ['🟤', 'Seppia'], ['🌫', 'Nebbia'],
+            ['💜', 'Sogno'], ['🔴', 'Rosso Intenso']
             ].forEach(([icon, name]) => {
                 const d = document.createElement('div');
                 d.className = 'fx-item';
@@ -2162,9 +2638,11 @@
                 d.innerHTML = `<span style="font-size:17px">${ic}</span><div style="flex:1;min-width:0"><div style="font-size:11px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</div><div style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">${dur}</div></div><button class="tbtn" onclick="addBuiltinAudio('${name}','${dur}');event.stopPropagation()">+</button>`;
                 document.getElementById('audio-list').appendChild(d);
             });
-            // Transitions
-            [['⬛', 'Dissolvenza'], ['⬅', 'Scorri Sx'], ['➡', 'Scorri Dx'], ['⬆', 'Alza'],
-            ['🔲', 'Iris'], ['🔄', 'Ruota'], ['⚡', 'Zoom In'], ['✨', 'Scintilla'], ['🌊', 'Onda'], ['💨', 'Soffia']
+            // Transitions (stile iMovie)
+            [['⬛', 'Dissolvenza'], ['⬅', 'Scorri Sx'], ['➡', 'Scorri Dx'],
+            ['⬆', 'Scorri Su'], ['⬇', 'Scorri Giù'], ['⬆', 'Alza'],
+            ['🔲', 'Iris'], ['🔄', 'Ruota'], ['🔍', 'Zoom In'], ['🔎', 'Zoom Out'],
+            ['✨', 'Scintilla'], ['🌊', 'Onda'], ['💨', 'Soffia'], ['🚪', 'Porta'], ['🎲', 'Cubo']
             ].forEach(([ic, name]) => {
                 const d = document.createElement('div');
                 d.className = 'fx-item';
@@ -2703,7 +3181,22 @@
         function upPropLive(k, v) {
             if (!state.selectedClip) return;
             state.selectedClip[k] = v;
-            renderClipProps(); renderCanvas(); setUnsaved();
+            // NON ri-renderiamo i props (resetterebbe lo slider attivo)
+            // aggiorniamo solo il valore mostrato accanto allo slider
+            const activeSlider = document.activeElement;
+            if (activeSlider && activeSlider.type === 'range') {
+                const sib = activeSlider.nextElementSibling;
+                if (sib && !sib.tagName.match(/INPUT|SELECT/i)) {
+                    // aggiorna label valore in linea
+                    const units = { opacity: '', rotate: '°', scaleX: '', scaleY: '', overlayX: '%', overlayY: '%', overlayScale: '%', blurAmount: 'px', hue: '°', brightness: '', contrast: '', saturation: '' };
+                    const u = units[k] ?? '';
+                    let display = u === '%' ? Math.round(v * 100) + u : parseFloat(v).toFixed(u === '' && k !== 'rotate' ? 1 : 0) + u;
+                    if (k === 'overlayX' || k === 'overlayY') display = Math.round(v * 100) + '%';
+                    if (k === 'overlayScale') display = Math.round(v * 100) + '%';
+                    sib.textContent = display;
+                }
+            }
+            renderCanvas(); setUnsaved();
         }
 
         // ═══════════════════════════════════════════════════════
@@ -2726,6 +3219,29 @@
             const { w, h } = state.resolution;
             canvas.width = w; canvas.height = h;
             ctx.fillStyle = '#000'; ctx.fillRect(0, 0, w, h);
+
+            // Split screen mode — renders all cells and returns early
+            if (state.splitLayout) {
+                renderSplitFrame(ctx, w, h, state.currentTime);
+                // Draw text overlays on top even in split mode
+                state.tracks.forEach(track => track.clips.forEach(clip => {
+                    const ct = state.currentTime;
+                    if (clip.type !== 'text' || ct < clip.start || ct >= clip.start + clip.duration) return;
+                    const localT = ct - clip.start;
+                    ctx.save(); ctx.globalAlpha = kfGetValue(clip, 'opacity', localT);
+                    if (clip.titleTemplate) { renderTitleClip(ctx, clip, w, h, localT); }
+                    else {
+                        const fontSize = kfGetValue(clip, 'fontSize', localT);
+                        ctx.font = `${clip.fontWeight || 700} ${Math.round(fontSize)}px DM Sans,sans-serif`;
+                        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                        let tx = kfGetValue(clip, 'x', localT) * w, ty = kfGetValue(clip, 'y', localT) * h;
+                        ctx.fillStyle = clip.color || '#fff'; ctx.shadowColor = 'rgba(0,0,0,.85)'; ctx.shadowBlur = 14;
+                        ctx.fillText(clip.text || clip.name, tx, ty);
+                    }
+                    ctx.restore();
+                }));
+                return;
+            }
 
             const hasClips = state.tracks.some(t => t.clips.length > 0);
             if (!hasClips) {
@@ -2753,7 +3269,7 @@
             }));
 
             // Render each track
-            state.tracks.forEach(track => track.clips.forEach(clip => {
+            for (const track of state.tracks) for (const clip of track.clips) {
                 const ct = state.currentTime;
                 if (ct < clip.start || ct >= clip.start + clip.duration) return;
                 const localT = ct - clip.start; // time within clip
@@ -2762,6 +3278,18 @@
                 ctx.globalAlpha = kfGetValue(clip, 'opacity', localT);
                 const f = buildFilter(clip);
                 if (f !== 'none') ctx.filter = f;
+
+                // Apply mask if present (path-based)
+                let gradMaskData = null;
+                if (clip.mask) {
+                    const maskResult = applyMaskToCtx(ctx, clip, w, h);
+                    if (maskResult && maskResult.type === 'gradient') {
+                        gradMaskData = maskResult;
+                        ctx.restore(); ctx.save();
+                        ctx.globalAlpha = kfGetValue(clip, 'opacity', localT);
+                        if (f !== 'none') ctx.filter = f;
+                    }
+                }
 
                 if ((clip.type === 'video' || clip.type === 'overlay') && clip.mediaId) {
                     const m = state.mediaPool.find(x => x.id === clip.mediaId);
@@ -2798,7 +3326,8 @@
                                 // Border
                                 ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 2; ctx.stroke();
                             } else {
-                                // Full-frame — rotate+scale via keyframes if present
+                                // Full-frame — stabilization + rotate+scale via keyframes if present
+                                applyStabilization(ctx, w, h);
                                 const vr = v.videoWidth / v.videoHeight;
                                 const sr = w / h;
                                 let dx = 0, dy = 0, dw = w, dh = h;
@@ -2814,7 +3343,12 @@
                                         ctx.drawImage(v, dx - w / 2, dy - h / 2, dw, dh);
                                     }
                                 } else {
-                                    if (clip.chromaKey) {
+                                    if (gradMaskData) {
+                                        drawWithGradientMask(ctx, (oc) => {
+                                            if (clip.chromaKey) drawWithChromaKey(oc, v, clip, dx, dy, dw, dh);
+                                            else oc.drawImage(v, dx, dy, dw, dh);
+                                        }, gradMaskData, w, h);
+                                    } else if (clip.chromaKey) {
                                         drawWithChromaKey(ctx, v, clip, dx, dy, dw, dh);
                                     } else {
                                         ctx.drawImage(v, dx, dy, dw, dh);
@@ -2840,6 +3374,11 @@
                         }
                     }
                 } else if (clip.type === 'text') {
+                    // Titoli con template speciale
+                    if (clip.titleTemplate) {
+                        renderTitleClip(ctx, clip, w, h, localT);
+                        ctx.restore(); continue;
+                    }
                     const fontSize = kfGetValue(clip, 'fontSize', localT);
                     ctx.font = `${clip.fontWeight || 700} ${Math.round(fontSize)}px DM Sans,sans-serif`;
                     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -2871,8 +3410,20 @@
                     ctx.shadowColor = 'rgba(0,0,0,.85)'; ctx.shadowBlur = 14;
                     ctx.fillText(clip.text || clip.name, tx, ty);
                 }
+                // Transizione uscita
+                if (clip.transition && clip.transition !== 'Nessuna') {
+                    const timeToEnd = (clip.start + clip.duration) - ct;
+                    if (timeToEnd >= 0 && timeToEnd < TRANSITION_DUR) {
+                        applyTransitionOverlay(ctx, clip.transition, w, h, 1 - (timeToEnd / TRANSITION_DUR), true);
+                    }
+                    // Transizione entrata (stessa transizione applicata all'inizio del clip)
+                    if (localT < TRANSITION_DUR) {
+                        applyTransitionOverlay(ctx, clip.transition, w, h, localT / TRANSITION_DUR, false);
+                    }
+                }
+
                 ctx.restore();
-            }));
+            }
 
             // Draw selection box for overlay clip
             const sel = state.selectedClip;
@@ -2953,7 +3504,7 @@
                 const dt = (now - last) / 1000; last = now;
                 state.currentTime = Math.min(state.currentTime + dt, state.duration || 0.001);
                 if (state.currentTime >= state.duration && state.duration > 0) state.currentTime = 0;
-                updateTimeDisplay(); updatePlayheadPos(); renderCanvas();
+                updateTimeDisplay(); updatePlayheadPos(); renderCanvas(); syncAudioVolumes();
                 requestAnimationFrame(frame);
             };
             requestAnimationFrame(frame);
@@ -3203,43 +3754,131 @@
         // ═══════════════════════════════════════════════════════
         //  EXPORT
         // ═══════════════════════════════════════════════════════
-        function showExportModal() { document.getElementById('export-modal').classList.add('open'); }
+        function showExportModal() {
+            document.getElementById('export-modal').classList.add('open');
+            onExFmtChange();
+        }
+        function onExFmtChange() {
+            const fmt = document.getElementById('ex-fmt').value;
+            const note = document.getElementById('ex-mp4-note');
+            if (note) note.style.display = (fmt === 'mp4') ? 'block' : 'none';
+        }
+
+        // ─── Export state ───────────────────────────────────────
+        let _exportCancelled = false;
+        function cancelExport() {
+            _exportCancelled = true;
+            document.getElementById('export-modal').classList.remove('open');
+            document.getElementById('export-progress').style.display = 'none';
+            document.getElementById('ex-start-btn').disabled = false;
+            document.getElementById('ex-cancel-btn').textContent = 'Annulla';
+            toast('Export annullato');
+        }
+
+        // ─── UI helpers ─────────────────────────────────────────
+        function _exportSetProgress(pct, text, stage = '') {
+            document.getElementById('progress-fill').style.width = pct + '%';
+            document.getElementById('progress-text').textContent = text;
+            document.getElementById('progress-stage').textContent = stage;
+        }
+        function _exportSetUI(busy) {
+            document.getElementById('ex-start-btn').disabled = busy;
+            document.getElementById('ex-cancel-btn').textContent = busy ? 'Annulla' : 'Chiudi';
+            document.getElementById('export-progress').style.display = busy ? 'block' : 'none';
+        }
+
+        // ─── Render all frames to an off-screen canvas ──────────
+        async function _renderAllFrames(ew, eh, fps, onProgress) {
+            const orig = state.currentTime;
+            const total = Math.max(1, Math.floor(state.duration * fps));
+            const ec = document.createElement('canvas');
+            ec.width = ew; ec.height = eh;
+            const ectx = ec.getContext('2d');
+            const frames = [];
+            const prevRes = state.resolution;
+            state.resolution = { w: ew, h: eh };
+            for (let f = 0; f < total; f++) {
+                if (_exportCancelled) { state.resolution = prevRes; state.currentTime = orig; return null; }
+                state.currentTime = f / fps;
+                // Sync video elements
+                state.tracks.forEach(t => t.clips.forEach(c => {
+                    if ((c.type === 'video' || c.type === 'overlay') && c.mediaId) {
+                        const m = state.mediaPool.find(x => x.id === c.mediaId);
+                        if (m?.videoEl && state.currentTime >= c.start && state.currentTime < c.start + c.duration) {
+                            const speed = c.speed ?? 1;
+                            const vt = (state.currentTime - c.start) * speed + (c.trimIn ?? 0);
+                            if (Math.abs(m.videoEl.currentTime - vt) > 0.04) m.videoEl.currentTime = vt;
+                        }
+                    }
+                }));
+                // Wait one rAF so video elements decode the new currentTime
+                await new Promise(r => requestAnimationFrame(r));
+                renderCanvas();
+                // Copy preview canvas to export canvas (handles resolution difference)
+                const pc = document.getElementById('preview-canvas');
+                ectx.drawImage(pc, 0, 0, ew, eh);
+                // Capture as JPEG blob for efficiency
+                const blob = await new Promise(r => ec.toBlob(r, 'image/jpeg', 0.92));
+                frames.push(blob);
+                if (f % 5 === 0) onProgress(Math.round((f / total) * 60), `Frame ${f + 1}/${total}`, 'Rendering...');
+                await new Promise(r => setTimeout(r, 0)); // yield to UI
+            }
+            state.resolution = prevRes;
+            state.currentTime = orig;
+            renderCanvas();
+            return frames;
+        }
+
+        // ─── Main export entry point ─────────────────────────────
         async function startExport() {
             if (state.duration <= 0) { toast('Timeline vuota'); return; }
+            _exportCancelled = false;
             const fmt = document.getElementById('ex-fmt').value;
             const [ew, eh] = document.getElementById('ex-res').value.split('x').map(Number);
             const fps = parseInt(document.getElementById('ex-fps').value);
             const q = document.getElementById('ex-q').value;
-            const prog = document.getElementById('export-progress');
-            prog.style.display = 'block';
-            const fill = document.getElementById('progress-fill');
-            const txt = document.getElementById('progress-text');
-            const ec = document.createElement('canvas');
-            ec.width = ew; ec.height = eh;
-            const ctx = ec.getContext('2d');
+            const name = document.getElementById('project-name').value || 'dalziedit';
 
-            // Helper: render to export canvas using same logic
-            const renderFrame = () => {
-                ctx.fillStyle = '#000'; ctx.fillRect(0, 0, ew, eh);
-                const scaleX = ew / state.resolution.w, scaleY = eh / state.resolution.h;
-                // Just draw from preview canvas scaled
-                ctx.drawImage(document.getElementById('preview-canvas'), 0, 0, ew, eh);
-            };
+            _exportSetUI(true);
+            _exportSetProgress(0, 'Preparazione...', '');
 
             if (fmt === 'frames') {
-                const orig = state.currentTime;
-                renderFrame();
+                _exportSetProgress(50, 'Rendering frame...', 'PNG');
+                renderCanvas();
+                await new Promise(r => requestAnimationFrame(r));
                 const a = document.createElement('a');
-                a.href = ec.toDataURL('image/png');
-                a.download = (document.getElementById('project-name').value || 'dalziedit') + '_frame.png';
+                a.href = document.getElementById('preview-canvas').toDataURL('image/png');
+                a.download = name + '_frame.png';
                 a.click();
-                state.currentTime = orig;
+                _exportSetUI(false);
                 document.getElementById('export-modal').classList.remove('open');
                 toast('Frame PNG esportato');
                 return;
             }
 
+            if (fmt === 'webm') {
+                await _exportWebM(ew, eh, fps, q, name);
+                return;
+            }
+
+            if (fmt === 'mp4') {
+                await _exportMP4(ew, eh, fps, q, name);
+                return;
+            }
+        }
+
+        // ─── WebM export (MediaRecorder, veloce) ────────────────
+        async function _exportWebM(ew, eh, fps, q, name) {
             try {
+                const frames = await _renderAllFrames(ew, eh, fps, (pct, txt, stage) => {
+                    _exportSetProgress(pct, txt, stage);
+                });
+                if (!frames) { _exportSetUI(false); return; }
+                _exportSetProgress(65, 'Assemblaggio WebM...', 'MediaRecorder');
+
+                // Usa un canvas animato per catturare lo stream
+                const ec = document.createElement('canvas'); ec.width = ew; ec.height = eh;
+                const ectx = ec.getContext('2d');
                 const stream = ec.captureStream(fps);
                 const mime = MediaRecorder.isTypeSupported('video/webm;codecs=vp9') ? 'video/webm;codecs=vp9' : 'video/webm';
                 const bps = q === 'high' ? 8e6 : q === 'med' ? 4e6 : 2e6;
@@ -3248,30 +3887,139 @@
                 rec.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
                 rec.onstop = () => {
                     const blob = new Blob(chunks, { type: 'video/webm' });
-                    const a = document.createElement('a');
-                    a.href = URL.createObjectURL(blob);
-                    a.download = (document.getElementById('project-name').value || 'dalziedit') + '.webm';
-                    a.click(); URL.revokeObjectURL(a.href);
+                    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name + '.webm'; a.click();
+                    URL.revokeObjectURL(a.href);
+                    _exportSetUI(false);
                     document.getElementById('export-modal').classList.remove('open');
-                    toast('✅ Video esportato!');
+                    toast('✅ WebM esportato!');
                 };
                 rec.start();
-                const orig = state.currentTime;
-                state.currentTime = 0;
-                const total = Math.floor(state.duration * fps);
-                for (let f = 0; f < total; f++) {
-                    state.currentTime = f / fps;
-                    renderCanvas(); renderFrame();
-                    fill.style.width = Math.round((f / total) * 100) + '%';
-                    txt.textContent = `Rendering ${Math.round((f / total) * 100)}%...`;
-                    await new Promise(r => setTimeout(r, 1000 / fps));
+                // Feed frames to the stream
+                for (let i = 0; i < frames.length; i++) {
+                    if (_exportCancelled) { rec.stop(); return; }
+                    const img = await createImageBitmap(frames[i]);
+                    ectx.drawImage(img, 0, 0);
+                    img.close();
+                    _exportSetProgress(65 + Math.round((i / frames.length) * 30), `Encoding ${i + 1}/${frames.length}`, 'WebM');
+                    await new Promise(r => setTimeout(r, Math.round(1000 / fps)));
                 }
-                state.currentTime = orig;
                 rec.stop();
             } catch (e) {
                 console.error(e);
-                toast('⚠ Errore export. Usa Chrome/Edge.');
+                _exportSetUI(false);
+                toast('⚠ Errore WebM. Usa Chrome o Edge.');
                 document.getElementById('export-modal').classList.remove('open');
+            }
+        }
+
+        // ─── MP4 export via FFmpeg.wasm ──────────────────────────
+        let _ffmpeg = null;
+        const FFMPEG_CDN = 'https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.15/dist/umd/';
+        const FFMPEG_CORE = 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd/';
+
+        async function _loadFFmpeg() {
+            if (_ffmpeg) return _ffmpeg;
+            _exportSetProgress(2, 'Caricamento FFmpeg.wasm (~32 MB)...', 'Prima volta: download in corso');
+            // Carica lo script FFmpeg.wasm dal CDN
+            if (!window.FFmpeg) {
+                await new Promise((res, rej) => {
+                    const s = document.createElement('script');
+                    s.src = FFMPEG_CDN + 'ffmpeg.js';
+                    s.onload = res; s.onerror = rej;
+                    document.head.appendChild(s);
+                });
+            }
+            const { FFmpeg: FF } = window.FFmpeg || window;
+            const ff = new FF();
+            ff.on('progress', ({ progress, time }) => {
+                const pct = Math.min(98, 65 + Math.round(progress * 30));
+                _exportSetProgress(pct, `FFmpeg encoding ${Math.round(progress * 100)}%`, `Tempo: ${time ? time.toFixed(1) + 's' : ''}`);
+            });
+            ff.on('log', ({ message }) => console.log('[ffmpeg]', message));
+            _exportSetProgress(5, 'Inizializzazione FFmpeg...', '');
+            await ff.load({
+                coreURL: FFMPEG_CORE + 'ffmpeg-core.js',
+                wasmURL: FFMPEG_CORE + 'ffmpeg-core.wasm',
+            });
+            _ffmpeg = ff;
+            return ff;
+        }
+
+        async function _exportMP4(ew, eh, fps, q, name) {
+            try {
+                // 1. Render tutti i frame
+                const frames = await _renderAllFrames(ew, eh, fps, (pct, txt, stage) => {
+                    _exportSetProgress(pct, txt, stage);
+                });
+                if (!frames) { _exportSetUI(false); return; }
+                if (_exportCancelled) { _exportSetUI(false); return; }
+
+                // 2. Carica FFmpeg
+                _exportSetProgress(62, 'Caricamento FFmpeg.wasm...', '');
+                const ff = await _loadFFmpeg();
+                if (_exportCancelled) { _exportSetUI(false); return; }
+
+                // 3. Scrivi i frame nel filesystem virtuale di FFmpeg
+                _exportSetProgress(65, 'Scrittura frame nel filesystem virtuale...', '');
+                const { fetchFile } = window.FFmpegUtil || window.FFmpeg || {};
+                const total = frames.length;
+                for (let i = 0; i < total; i++) {
+                    if (_exportCancelled) { _exportSetUI(false); return; }
+                    const arrBuf = await frames[i].arrayBuffer();
+                    await ff.writeFile(`frame${String(i).padStart(6, '0')}.jpg`, new Uint8Array(arrBuf));
+                    if (i % 20 === 0) _exportSetProgress(65 + Math.round((i / total) * 8), `Scrittura frame ${i + 1}/${total}`, '');
+                }
+
+                // 4. Esegui FFmpeg encode
+                _exportSetProgress(73, 'Encoding MP4 H.264...', 'Potrebbe richiedere qualche minuto');
+                const crf = q === 'high' ? '18' : q === 'med' ? '24' : '30';
+                const preset = 'medium';
+                await ff.exec([
+                    '-framerate', String(fps),
+                    '-i', 'frame%06d.jpg',
+                    '-c:v', 'libx264',
+                    '-preset', preset,
+                    '-crf', crf,
+                    '-pix_fmt', 'yuv420p',
+                    '-movflags', '+faststart',
+                    '-vf', `scale=${ew}:${eh}`,
+                    'output.mp4'
+                ]);
+
+                // 5. Leggi il file output
+                _exportSetProgress(96, 'Finalizzazione...', '');
+                const data = await ff.readFile('output.mp4');
+                const blob = new Blob([data.buffer], { type: 'video/mp4' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a'); a.href = url; a.download = name + '.mp4'; a.click();
+                URL.revokeObjectURL(url);
+
+                // 6. Pulisci filesystem virtuale
+                for (let i = 0; i < total; i++) ff.deleteFile(`frame${String(i).padStart(6, '0')}.jpg`).catch(() => { });
+                ff.deleteFile('output.mp4').catch(() => { });
+
+                _exportSetProgress(100, '✅ MP4 esportato con successo!', '');
+                _exportSetUI(false);
+                document.getElementById('export-modal').classList.remove('open');
+                toast('✅ MP4 esportato! ' + name + '.mp4');
+
+            } catch (e) {
+                console.error('[MP4 export]', e);
+                _exportSetUI(false);
+                _exportSetProgress(0, '', '');
+                // Fallback: offri WebM
+                const fb = confirm('⚠ Errore MP4 (FFmpeg): ' + e.message + '\n\nVuoi esportare in WebM come alternativa?');
+                if (fb) {
+                    document.getElementById('ex-fmt').value = 'webm';
+                    const [ew2, eh2] = document.getElementById('ex-res').value.split('x').map(Number);
+                    const fps2 = parseInt(document.getElementById('ex-fps').value);
+                    const q2 = document.getElementById('ex-q').value;
+                    const n2 = document.getElementById('project-name').value || 'dalziedit';
+                    _exportSetUI(true);
+                    await _exportWebM(ew2, eh2, fps2, q2, n2);
+                } else {
+                    document.getElementById('export-modal').classList.remove('open');
+                }
             }
         }
 
@@ -3288,6 +4036,852 @@
             setTimeout(() => t.classList.remove('show'), d);
         }
 
+
+
+
+        // ═══════════════════════════════════════════════════════
+        //  TRANSIZIONI CANVAS — applicate durante renderCanvas
+        // ═══════════════════════════════════════════════════════
+        const TRANSITION_DUR = 0.6; // secondi
+
+        function applyTransitionOverlay(ctx, transName, w, h, progress, isExit) {
+            // progress: 0=inizio transizione, 1=fine
+            const p = isExit ? progress : 1 - progress;
+            // p=1 → piena opacità/effetto, p=0 → trasparente/assente
+            ctx.save();
+            switch (transName) {
+                case 'Dissolvenza':
+                    ctx.globalAlpha = p;
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, w, h);
+                    break;
+                case 'Flash':
+                    ctx.globalAlpha = Math.sin(progress * Math.PI) * 0.9;
+                    ctx.fillStyle = '#fff';
+                    ctx.fillRect(0, 0, w, h);
+                    break;
+                case 'Iris': {
+                    const maxR = Math.sqrt(w * w + h * h) * 0.55;
+                    const r = isExit ? (1 - progress) * maxR : progress * maxR;
+                    ctx.fillStyle = '#000';
+                    ctx.beginPath();
+                    ctx.rect(0, 0, w, h);
+                    ctx.arc(w / 2, h / 2, Math.max(0, r), 0, Math.PI * 2, true);
+                    ctx.fill('evenodd');
+                    break;
+                }
+                case 'Porta': {
+                    const half = isExit ? progress * (w / 2) : (1 - progress) * (w / 2);
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, half, h);
+                    ctx.fillRect(w - half, 0, half, h);
+                    break;
+                }
+                case 'Alza':
+                case 'Scorri Su': {
+                    const offset = isExit ? progress * h : (1 - progress) * h;
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, w, offset);
+                    break;
+                }
+                case 'Scorri Giù': {
+                    const offset = isExit ? progress * h : (1 - progress) * h;
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, h - offset, w, offset);
+                    break;
+                }
+                case 'Scorri Sx': {
+                    const offset = isExit ? progress * w : (1 - progress) * w;
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, offset, h);
+                    break;
+                }
+                case 'Scorri Dx': {
+                    const offset = isExit ? progress * w : (1 - progress) * w;
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(w - offset, 0, offset, h);
+                    break;
+                }
+                case 'Zoom In':
+                case 'Zoom Out': {
+                    ctx.globalAlpha = p * 0.75;
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, w, h);
+                    break;
+                }
+                case 'Scintilla': {
+                    // Particelle bianche random (seed da progress)
+                    const count = Math.floor(p * 80);
+                    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+                    for (let i = 0; i < count; i++) {
+                        const px = ((Math.sin(i * 17.3 + progress * 50) * 0.5 + 0.5)) * w;
+                        const py = ((Math.cos(i * 13.7 + progress * 30) * 0.5 + 0.5)) * h;
+                        ctx.fillRect(px, py, 2 + i % 3, 2 + i % 3);
+                    }
+                    break;
+                }
+                default:
+                    ctx.globalAlpha = p * 0.5;
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(0, 0, w, h);
+            }
+            ctx.restore();
+        }
+
+
+
+        // ═══════════════════════════════════════════════════════
+        //  SPLIT SCREEN
+        // ═══════════════════════════════════════════════════════
+        let splitLayout = null;
+
+        const SPLIT_CONFIGS = {
+            h2: { label: '2 video affiancati', cells: [{ x: 0, y: 0, w: 0.5, h: 1 }, { x: 0.5, y: 0, w: 0.5, h: 1 }] },
+            v2: { label: '2 video sopra/sotto', cells: [{ x: 0, y: 0, w: 1, h: 0.5 }, { x: 0, y: 0.5, w: 1, h: 0.5 }] },
+            q4: { label: '4 video griglia', cells: [{ x: 0, y: 0, w: 0.5, h: 0.5 }, { x: 0.5, y: 0, w: 0.5, h: 0.5 }, { x: 0, y: 0.5, w: 0.5, h: 0.5 }, { x: 0.5, y: 0.5, w: 0.5, h: 0.5 }] },
+            t3: { label: '3 video (grande+2)', cells: [{ x: 0, y: 0, w: 0.6, h: 1 }, { x: 0.6, y: 0, w: 0.4, h: 0.5 }, { x: 0.6, y: 0.5, w: 0.4, h: 0.5 }] },
+        };
+
+        function setSplitLayout(layout) {
+            splitLayout = layout;
+            document.querySelectorAll('.split-preset').forEach(b => b.classList.remove('active'));
+            document.getElementById('spl-' + layout)?.classList.add('active');
+            document.getElementById('split-controls').style.display = 'block';
+            document.getElementById('split-layout-label').textContent = '\u229e ' + (SPLIT_CONFIGS[layout]?.label || layout);
+            const cfg = SPLIT_CONFIGS[layout]; if (!cfg) return;
+            const needed = cfg.cells.length - 1;
+            const existing = state.tracks.filter(t => t.type === 'overlay');
+            for (let i = existing.length; i < needed; i++)addOverlayTrack();
+            state.splitLayout = { type: layout, gap: 4, borderColor: '#000000', radius: 0 };
+            pushHistory(); renderCanvas(); setUnsaved();
+            toast('\u229e Split screen: ' + cfg.label);
+        }
+        function updateSplitGap() {
+            if (state.splitLayout) {
+                state.splitLayout.gap = parseInt(document.getElementById('split-gap').value);
+                state.splitLayout.radius = parseInt(document.getElementById('split-radius').value);
+                state.splitLayout.borderColor = document.getElementById('split-border-color').value;
+                renderCanvas();
+            }
+        }
+        function removeSplitLayout() {
+            splitLayout = null; delete state.splitLayout;
+            document.querySelectorAll('.split-preset').forEach(b => b.classList.remove('active'));
+            document.getElementById('split-controls').style.display = 'none';
+            pushHistory(); renderCanvas(); setUnsaved(); toast('Split screen rimosso');
+        }
+        function renderSplitFrame(ctx, w, h, t) {
+            const sl = state.splitLayout; if (!sl) return false;
+            const cfg = SPLIT_CONFIGS[sl.type]; if (!cfg) return false;
+            const gap = sl.gap ?? 4, radius = sl.radius ?? 0, bc = sl.borderColor ?? '#000';
+            ctx.fillStyle = bc; ctx.fillRect(0, 0, w, h);
+            const videoClips = [];
+            state.tracks.forEach(track => track.clips.forEach(clip => {
+                if ((clip.type === 'video' || clip.type === 'overlay') && clip.mediaId) {
+                    const m = state.mediaPool.find(x => x.id === clip.mediaId);
+                    if (m?.videoEl?.videoWidth && t >= clip.start && t < clip.start + clip.duration)
+                        videoClips.push({ clip, v: m.videoEl });
+                }
+            }));
+            cfg.cells.forEach((cell, i) => {
+                const vc = videoClips[i];
+                const cx = cell.x * w + gap, cy = cell.y * h + gap, cw = cell.w * w - gap * 2, ch = cell.h * h - gap * 2;
+                ctx.save();
+                ctx.beginPath();
+                if (radius > 0 && ctx.roundRect) { ctx.roundRect(cx, cy, cw, ch, radius); } else { ctx.rect(cx, cy, cw, ch); }
+                ctx.clip();
+                if (vc) {
+                    const v = vc.v, vr = v.videoWidth / v.videoHeight, cr = cw / ch;
+                    let sx = 0, sy = 0, sw = v.videoWidth, sh = v.videoHeight;
+                    if (vr > cr) { sw = sh * cr; sx = (v.videoWidth - sw) / 2; } else { sh = sw / cr; sy = (v.videoHeight - sh) / 2; }
+                    const f = buildFilter(vc.clip); if (f !== 'none') ctx.filter = f;
+                    ctx.globalAlpha = vc.clip.opacity ?? 1;
+                    ctx.drawImage(v, sx, sy, sw, sh, cx, cy, cw, ch);
+                    ctx.filter = 'none'; ctx.globalAlpha = 1;
+                } else {
+                    ctx.fillStyle = '#1a1a2e'; ctx.fillRect(cx, cy, cw, ch);
+                    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+                    ctx.font = `bold ${Math.round(Math.min(cw, ch) / 4)}px DM Sans,sans-serif`;
+                    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                    ctx.fillText(`${i + 1}`, cx + cw / 2, cy + ch / 2);
+                }
+                ctx.restore();
+            });
+            return true;
+        }
+
+        // ═══════════════════════════════════════════════════════
+        //  TITOLI ANIMATI
+        // ═══════════════════════════════════════════════════════
+        const TITLE_TEMPLATES = [
+            { id: 'center-fade', name: 'Centro — Fade', desc: 'Testo centrato con dissolvenza', bg: 'linear-gradient(135deg,#0a0a2e,#1a1a4e)', color: '#ffffff', anim: 'fade-in', fontSize: 72, fontWeight: 800, y: 0.5, duration: 4 },
+            { id: 'lower-third', name: 'Terzo inferiore', desc: 'Didascalia in basso a sinistra', bg: 'linear-gradient(90deg,#6366f1,#a855f7)', color: '#ffffff', anim: 'slide-in', fontSize: 52, fontWeight: 700, y: 0.82, x: 0.25, duration: 5, subtext: 'Sottotitolo', subtextSize: 32 },
+            { id: 'title-card', name: 'Title Card', desc: 'Schermata nera con titolo grande', bg: '#000000', color: '#ffffff', anim: 'zoom-in', fontSize: 90, fontWeight: 800, y: 0.45, duration: 4, subtext: 'Sottotitolo', subtextSize: 36, subtextY: 0.58 },
+            { id: 'neon-glow', name: 'Neon Glow', desc: 'Testo con alone luminoso', bg: '#000000', color: '#00ffcc', anim: 'fade-in', fontSize: 80, fontWeight: 800, y: 0.5, duration: 4, glow: true },
+            { id: 'cinema-credits', name: 'Credits Cinema', desc: 'Scorrimento verticale dal basso', bg: '#000000', color: '#e8e8e8', anim: 'slide-up', fontSize: 48, fontWeight: 400, y: 0.5, duration: 6 },
+            { id: 'bold-impact', name: 'Bold Impact', desc: 'Testo grande con zoom esplosivo', bg: 'linear-gradient(135deg,#ff6b6b,#feca57)', color: '#ffffff', anim: 'zoom-in', fontSize: 100, fontWeight: 900, y: 0.5, duration: 3 },
+            { id: 'typewriter-mono', name: 'Typewriter', desc: 'Testo che appare carattere per carattere', bg: '#0a0a0f', color: '#00ff88', anim: 'typewriter', fontSize: 50, fontWeight: 500, y: 0.5, duration: 5, monospace: true },
+            { id: 'split-reveal', name: 'Split Reveal', desc: 'Due righe che si aprono dal centro', bg: 'linear-gradient(180deg,#000,#111)', color: '#ffffff', anim: 'split-reveal', fontSize: 72, fontWeight: 800, y: 0.5, duration: 4 },
+        ];
+
+        function initTitleTemplates() {
+            const list = document.getElementById('title-templates-list');
+            if (!list) return; list.innerHTML = '';
+            TITLE_TEMPLATES.forEach(tpl => {
+                const div = document.createElement('div'); div.className = 'title-tpl';
+                div.innerHTML = `<div class="title-tpl-thumb" style="background:${tpl.bg};color:${tpl.color}"><span style="font-size:8px;font-weight:800">T</span></div><div class="title-tpl-info"><div class="title-tpl-name">${tpl.name}</div><div class="title-tpl-desc">${tpl.desc}</div></div><button class="tbtn" style="font-size:9px;height:22px;padding:0 7px;flex-shrink:0">+</button>`;
+                div.querySelector('button').onclick = () => addTitleTemplate(tpl);
+                list.appendChild(div);
+            });
+        }
+        function addTitleTemplate(tpl) {
+            let track = state.tracks.find(t => t.type === 'text');
+            if (!track) { addTextTrack(); track = state.tracks.find(t => t.type === 'text'); }
+            const id = 'c' + (++clipId);
+            const clip = {
+                id, type: 'text', name: tpl.name, text: tpl.name, start: state.currentTime, duration: tpl.duration,
+                fontSize: tpl.fontSize, fontWeight: tpl.fontWeight, color: tpl.color, outlineColor: '', outlineWidth: 0,
+                opacity: 1, x: tpl.x ?? 0.5, y: tpl.y ?? 0.5, textAnim: tpl.anim, titleTemplate: tpl.id,
+                titleBg: tpl.bg, titleGlow: tpl.glow ?? false, titleSubtext: tpl.subtext ?? '',
+                titleSubtextSize: tpl.subtextSize ?? 30, titleSubtextY: tpl.subtextY ?? ((tpl.y ?? 0.5) + 0.1),
+                titleMonospace: tpl.monospace ?? false
+            };
+            track.clips.push(clip);
+            selectClip(clip, track); pushHistory(); updateDuration(); renderTracks(); renderCanvas(); setUnsaved();
+            toast('Titolo aggiunto: ' + tpl.name);
+        }
+        function parseCSSGradient(ctx, css, w, h) {
+            try {
+                const stops = [];
+                const inner = css.replace(/^(linear|radial)-gradient\(/, '').replace(/\)$/, '');
+                const parts = inner.split(',').map(s => s.trim());
+                let colorParts = parts;
+                if (/^\d+deg$/.test(parts[0])) colorParts = parts.slice(1);
+                else if (parts[0].startsWith('to ')) colorParts = parts.slice(1);
+                colorParts.forEach((p, i) => { const m = p.match(/(#[0-9a-fA-F]{3,8}|rgba?\([^)]+\))/); if (m) stops.push({ color: m[1], pos: i / Math.max(1, colorParts.length - 1) }); });
+                if (!stops.length) return null;
+                const grad = ctx.createLinearGradient(0, 0, w, h);
+                stops.forEach(s => grad.addColorStop(s.pos, s.color));
+                return grad;
+            } catch (e) { return null; }
+        }
+        function renderTitleClip(ctx, clip, w, h, localT) {
+            if (clip.titleBg) {
+                if (clip.titleBg.startsWith('linear-gradient') || clip.titleBg.startsWith('radial-gradient')) {
+                    const g = parseCSSGradient(ctx, clip.titleBg, w, h); if (g) { ctx.fillStyle = g; ctx.fillRect(0, 0, w, h); }
+                } else { ctx.fillStyle = clip.titleBg; ctx.fillRect(0, 0, w, h); }
+            }
+            const font = clip.titleMonospace ? 'JetBrains Mono,monospace' : 'DM Sans,sans-serif';
+            let tx = (clip.x ?? 0.5) * w, ty = (clip.y ?? 0.5) * h, alpha = clip.opacity ?? 1;
+            if (clip.textAnim === 'slide-up') {
+                const p = Math.min(1, localT / 0.6), ease = 1 - Math.pow(1 - p, 3);
+                ty = ((clip.y ?? 0.5) + 0.15 * (1 - ease)) * h; alpha *= Math.min(1, localT / 0.4);
+            } else if (clip.textAnim === 'split-reveal') {
+                const p = Math.min(1, localT / 0.5), ease = 1 - Math.pow(1 - p, 3), off = (1 - ease) * h * 0.1;
+                ctx.save(); ctx.beginPath(); ctx.rect(0, 0, w, h / 2); ctx.clip();
+                _drawTitleText(ctx, clip, tx, ty - off, alpha, font); ctx.restore();
+                ctx.save(); ctx.beginPath(); ctx.rect(0, h / 2, w, h / 2); ctx.clip();
+                _drawTitleText(ctx, clip, tx, ty + off, alpha, font); ctx.restore();
+                if (clip.titleSubtext) _drawSubtext(ctx, clip, w, h, localT, alpha, font); return;
+            }
+            if (clip.titleGlow) { ctx.save(); ctx.shadowColor = clip.color || '#00ffcc'; ctx.shadowBlur = 30; }
+            _drawTitleText(ctx, clip, tx, ty, alpha, font);
+            if (clip.titleGlow) ctx.restore();
+            if (clip.titleSubtext) _drawSubtext(ctx, clip, w, h, localT, alpha, font);
+        }
+        function _drawTitleText(ctx, clip, tx, ty, alpha, font) {
+            ctx.save(); ctx.globalAlpha = alpha;
+            ctx.font = `${clip.fontWeight || 700} ${clip.fontSize || 60}px ${font}`;
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillStyle = clip.color || '#fff';
+            if (clip.outlineWidth > 0) { ctx.strokeStyle = clip.outlineColor || '#000'; ctx.lineWidth = clip.outlineWidth; ctx.strokeText(clip.text || clip.name, tx, ty); }
+            ctx.fillText(clip.text || clip.name, tx, ty); ctx.restore();
+        }
+        function _drawSubtext(ctx, clip, w, h, localT, alpha, font) {
+            const sy = (clip.titleSubtextY ?? 0.65) * h;
+            ctx.save(); ctx.globalAlpha = alpha * Math.min(1, localT / 0.6);
+            ctx.font = `400 ${clip.titleSubtextSize || 32}px ${font}`;
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillStyle = (clip.color || '#fff') + 'cc';
+            ctx.fillText(clip.titleSubtext, w / 2, sy); ctx.restore();
+        }
+
+        // ═══════════════════════════════════════════════════════
+        //  AUDIO EQ + FADE + STABILIZZAZIONE
+        // ═══════════════════════════════════════════════════════
+        const EQ_BANDS = ['60Hz', '250Hz', '1kHz', '4kHz', '12kHz'];
+        const eqValues = [0, 0, 0, 0, 0];
+        const EQ_PRESETS = { flat: [0, 0, 0, 0, 0], bass: [8, 5, 0, -2, -3], treble: [-3, -1, 0, 5, 8], vocal: [-2, 0, 5, 4, 2], cinematic: [6, 2, -1, 1, 4] };
+
+        function initEqBars() {
+            const grid = document.getElementById('eq-bars');
+            if (!grid || grid.children.length > 0) return;
+            EQ_BANDS.forEach((band, i) => {
+                const wrap = document.createElement('div'); wrap.className = 'eq-bar-wrap';
+                wrap.innerHTML = `<input type="range" min="-12" max="12" step="1" value="0" id="eq-band-${i}" oninput="eqValues[${i}]=parseInt(this.value);eqApply();document.getElementById('eq-band-lbl-${i}').textContent=(this.value>0?'+':'')+this.value"><span class="eq-label" id="eq-band-lbl-${i}">0</span><span class="eq-label">${band}</span>`;
+                grid.appendChild(wrap);
+            });
+        }
+        function eqPreset(name) {
+            const vals = EQ_PRESETS[name] || EQ_PRESETS.flat;
+            vals.forEach((v, i) => { eqValues[i] = v; const el = document.getElementById('eq-band-' + i); const lbl = document.getElementById('eq-band-lbl-' + i); if (el) el.value = v; if (lbl) lbl.textContent = (v > 0 ? '+' : '') + v; });
+            eqApply(); toast('EQ: ' + name);
+        }
+        function eqApply() {
+            const clip = state.selectedClip; if (!clip) return;
+            clip.eqBands = [...eqValues];
+            const bass = eqValues[0] / 12, mid = eqValues[2] / 12, hi = eqValues[4] / 12;
+            if (!clip._origBrightness) clip._origBrightness = clip.brightness ?? 1;
+            clip.brightness = Math.max(0.5, Math.min(2, (clip._origBrightness || 1) + bass * 0.1));
+            clip.contrast = Math.max(0.5, Math.min(2, 1 + mid * 0.15));
+            clip.saturation = Math.max(0, Math.min(3, 1 + hi * 0.2));
+            renderCanvas(); setUnsaved();
+        }
+        function applyAudioFade() {
+            const clip = state.selectedClip; if (!clip) return;
+            clip.fadeIn = parseFloat(document.getElementById('eq-fadein').value);
+            clip.fadeOut = parseFloat(document.getElementById('eq-fadeout').value);
+            clip.volume = parseFloat(document.getElementById('eq-volume').value);
+            clip.normalize = document.getElementById('eq-normalize').checked;
+            clip.noiseGate = parseInt(document.getElementById('eq-gate').value) / 100;
+            renderCanvas(); setUnsaved();
+        }
+        function getAudioVolumeAtTime(clip, localT) {
+            let vol = clip.volume ?? 1;
+            const fi = clip.fadeIn ?? 0, fo = clip.fadeOut ?? 0;
+            if (fi > 0 && localT < fi) vol *= localT / fi;
+            if (fo > 0 && localT > clip.duration - fo) vol *= (clip.duration - localT) / fo;
+            return Math.max(0, vol);
+        }
+        function syncAudioVolumes() {
+            const ct = state.currentTime;
+            state.tracks.forEach(track => track.clips.forEach(clip => {
+                if (!clip.mediaId) return;
+                const m = state.mediaPool.find(x => x.id === clip.mediaId);
+                const el = m?.videoEl || m?.audioEl; if (!el) return;
+                const localT = ct - clip.start; if (localT < 0 || localT >= clip.duration) return;
+                el.volume = Math.min(1, getAudioVolumeAtTime(clip, localT) * state.volume);
+            }));
+        }
+        let stabEnabled = false;
+        function toggleStabilize() { stabEnabled = document.getElementById('stab-enable').checked; toast(stabEnabled ? '\ud83c\udfac Stabilizzazione attiva' : 'Stabilizzazione disattivata'); }
+        function applyStabilization(ctx, w, h) {
+            if (!stabEnabled) return;
+            const s = parseInt(document.getElementById('stab-strength')?.value || 8);
+            const zoom = 1 + s / 100; const cx = w / 2, cy = h / 2;
+            ctx.translate(cx, cy); ctx.scale(zoom, zoom); ctx.translate(-cx, -cy);
+        }
+        function onSwitchEq() {
+            initEqBars();
+            const clip = state.selectedClip;
+            if (clip?.eqBands) clip.eqBands.forEach((v, i) => { eqValues[i] = v; const el = document.getElementById('eq-band-' + i); const lbl = document.getElementById('eq-band-lbl-' + i); if (el) el.value = v; if (lbl) lbl.textContent = (v > 0 ? '+' : '') + v; });
+            if (clip) {
+                const fi = document.getElementById('eq-fadein'); const fo = document.getElementById('eq-fadeout'); const vl = document.getElementById('eq-volume');
+                if (fi) { fi.value = clip.fadeIn ?? 0; document.getElementById('eq-fadein-v').textContent = (clip.fadeIn ?? 0).toFixed(1) + 's'; }
+                if (fo) { fo.value = clip.fadeOut ?? 0; document.getElementById('eq-fadeout-v').textContent = (clip.fadeOut ?? 0).toFixed(1) + 's'; }
+                if (vl) { vl.value = clip.volume ?? 1; document.getElementById('eq-volume-v').textContent = Math.round((clip.volume ?? 1) * 100) + '%'; }
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════
+        //  MASCHERA FORMA LIBERA (PENNELLO)
+        // ═══════════════════════════════════════════════════════
+
+        // Canvas offscreen che accumula i tratti del pennello (dimensione reale del video)
+        let fhMaskCanvas = null;   // offscreen, stessa risoluzione del video
+        let fhHistory = [];        // stack per undo (ogni stroke)
+        let fhIsDrawing = false;
+        let fhLastX = 0, fhLastY = 0;
+
+        function fhInit() {
+            const clip = state.selectedClip;
+            const { w, h } = state.resolution;
+
+            // Crea/resetta canvas offscreen alla risoluzione del video
+            fhMaskCanvas = document.createElement('canvas');
+            fhMaskCanvas.width = w;
+            fhMaskCanvas.height = h;
+            const octx = fhMaskCanvas.getContext('2d');
+
+            // Se il clip ha già una maschera freehand, ripristinala
+            if (clip?.mask?.type === 'freehand' && clip.mask.dataURL) {
+                const img = new Image();
+                img.onload = () => { octx.drawImage(img, 0, 0); fhRedrawPanel(); };
+                img.src = clip.mask.dataURL;
+            } else {
+                // Inizia con tutto bianco (tutto visibile)
+                octx.fillStyle = '#fff';
+                octx.fillRect(0, 0, w, h);
+                fhRedrawPanel();
+            }
+            fhHistory = [];
+        }
+
+        // Aggiorna il mini canvas nel pannello con l'anteprima corrente
+        function fhRedrawPanel() {
+            const panelCanvas = document.getElementById('freehand-canvas');
+            if (!panelCanvas || !fhMaskCanvas) return;
+
+            // Adatta dimensioni canvas panel all'aspect ratio del video
+            const { w, h } = state.resolution;
+            const panelW = panelCanvas.parentElement?.clientWidth || 220;
+            panelCanvas.width = panelW;
+            panelCanvas.height = Math.round(panelW * h / w);
+
+            const pctx = panelCanvas.getContext('2d');
+            pctx.clearRect(0, 0, panelCanvas.width, panelCanvas.height);
+
+            // Disegna frame video come sfondo (se disponibile)
+            const clip = state.selectedClip;
+            if (clip?.mediaId) {
+                const m = state.mediaPool.find(x => x.id === clip.mediaId);
+                if (m?.videoEl?.videoWidth) {
+                    pctx.drawImage(m.videoEl, 0, 0, panelCanvas.width, panelCanvas.height);
+                }
+            }
+
+            // Overlay maschera semitrasparente (verde = visibile, nero = mascherato)
+            const tempCanvas = document.createElement('canvas');
+            tempCanvas.width = panelCanvas.width;
+            tempCanvas.height = panelCanvas.height;
+            const tctx = tempCanvas.getContext('2d');
+            tctx.drawImage(fhMaskCanvas, 0, 0, panelCanvas.width, panelCanvas.height);
+
+            // Tinta verde sui pixel bianchi (area visibile)
+            const id = tctx.getImageData(0, 0, panelCanvas.width, panelCanvas.height);
+            const d = id.data;
+            for (let i = 0; i < d.length; i += 4) {
+                const lum = d[i];
+                if (lum > 128) {
+                    // area visibile: colorala di verde semi-trasparente
+                    d[i] = 0;
+                    d[i + 1] = 200;
+                    d[i + 2] = 100;
+                    d[i + 3] = 80;
+                } else {
+                    // area mascherata: scura semi-trasparente
+                    d[i] = 0;
+                    d[i + 1] = 0;
+                    d[i + 2] = 0;
+                    d[i + 3] = 160;
+                }
+            }
+            tctx.putImageData(id, 0, 0);
+            pctx.drawImage(tempCanvas, 0, 0);
+
+            // Bordo verde
+            pctx.strokeStyle = 'rgba(0,217,177,0.6)';
+            pctx.lineWidth = 1.5;
+            pctx.strokeRect(0, 0, panelCanvas.width, panelCanvas.height);
+        }
+
+        // Coordinate mouse/touch → coordinate video
+        function fhEventCoords(e, canvas) {
+            const rect = canvas.getBoundingClientRect();
+            const { w, h } = state.resolution;
+            let cx, cy;
+            if (e.touches) {
+                cx = e.touches[0].clientX - rect.left;
+                cy = e.touches[0].clientY - rect.top;
+            } else {
+                cx = e.clientX - rect.left;
+                cy = e.clientY - rect.top;
+            }
+            return {
+                x: (cx / rect.width) * w,
+                y: (cy / rect.height) * h
+            };
+        }
+
+        function fhSetup() {
+            const canvas = document.getElementById('freehand-canvas');
+            if (!canvas) return;
+
+            // Salva snapshot per undo prima di ogni stroke
+            function saveSnapshot() {
+                const snap = document.createElement('canvas');
+                snap.width = fhMaskCanvas.width;
+                snap.height = fhMaskCanvas.height;
+                snap.getContext('2d').drawImage(fhMaskCanvas, 0, 0);
+                fhHistory.push(snap);
+                if (fhHistory.length > 30) fhHistory.shift();
+            }
+
+            function getStrokeColor() {
+                // Tasto destro / Option held = cancella (nero = maschera)
+                return fhEraseMode ? '#000' : '#fff';
+            }
+
+            function startStroke(e) {
+                e.preventDefault();
+                saveSnapshot();
+                fhIsDrawing = true;
+                const { x, y } = fhEventCoords(e, canvas);
+                fhLastX = x; fhLastY = y;
+                const octx = fhMaskCanvas.getContext('2d');
+                const size = parseInt(document.getElementById('fh-size').value);
+                const feather = parseInt(document.getElementById('fh-feather').value);
+                // Dot at start
+                fhPaintDot(octx, x, y, size, feather, fhEraseMode ? '#000' : '#fff');
+                fhRedrawPanel();
+            }
+
+            function moveStroke(e) {
+                e.preventDefault();
+                if (!fhIsDrawing) return;
+                const { x, y } = fhEventCoords(e, canvas);
+                const octx = fhMaskCanvas.getContext('2d');
+                const size = parseInt(document.getElementById('fh-size').value);
+                const feather = parseInt(document.getElementById('fh-feather').value);
+                fhPaintLine(octx, fhLastX, fhLastY, x, y, size, feather, fhEraseMode ? '#000' : '#fff');
+                fhLastX = x; fhLastY = y;
+                fhRedrawPanel();
+            }
+
+            function endStroke(e) {
+                if (!fhIsDrawing) return;
+                fhIsDrawing = false;
+                // Auto-applica la maschera in tempo reale
+                if (state.selectedClip) {
+                    state.selectedClip.mask = { type: 'freehand', dataURL: fhMaskCanvas.toDataURL('image/png') };
+                    renderCanvas();
+                }
+            }
+
+            canvas.addEventListener('mousedown', startStroke);
+            canvas.addEventListener('mousemove', moveStroke);
+            canvas.addEventListener('mouseup', endStroke);
+            canvas.addEventListener('mouseleave', endStroke);
+            canvas.addEventListener('touchstart', startStroke, { passive: false });
+            canvas.addEventListener('touchmove', moveStroke, { passive: false });
+            canvas.addEventListener('touchend', endStroke);
+
+            // Tasto destro = modalità cancella
+            canvas.addEventListener('contextmenu', e => { e.preventDefault(); fhEraseMode = !fhEraseMode; canvas.style.cursor = fhEraseMode ? 'cell' : 'crosshair'; toast(fhEraseMode ? '🧹 Modalità cancella' : '✏ Modalità disegno'); });
+        }
+
+        let fhEraseMode = false;
+
+        // Disegna un cerchio morbido (radial gradient) sull'offscreen mask
+        function fhPaintDot(octx, x, y, size, feather, color) {
+            const r = size;
+            const grad = octx.createRadialGradient(x, y, Math.max(0, r - feather), x, y, r);
+            grad.addColorStop(0, color);
+            grad.addColorStop(1, color === '#fff' ? 'rgba(255,255,255,0)' : 'rgba(0,0,0,0)');
+            octx.fillStyle = grad;
+            octx.beginPath();
+            octx.arc(x, y, r, 0, Math.PI * 2);
+            octx.fill();
+        }
+
+        // Interpola punti lungo una linea e dipinge dot
+        function fhPaintLine(octx, x1, y1, x2, y2, size, feather, color) {
+            const dist = Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+            const steps = Math.max(1, Math.floor(dist / (size * 0.3)));
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                fhPaintDot(octx, x1 + (x2 - x1) * t, y1 + (y2 - y1) * t, size, feather, color);
+            }
+        }
+
+        function fhClear() {
+            if (!fhMaskCanvas) return;
+            const { w, h } = state.resolution;
+            const octx = fhMaskCanvas.getContext('2d');
+            // Pulisci con bianco = tutto visibile
+            octx.fillStyle = '#fff';
+            octx.fillRect(0, 0, w, h);
+            fhHistory = [];
+            fhRedrawPanel();
+            if (state.selectedClip) {
+                state.selectedClip.mask = { type: 'freehand', dataURL: fhMaskCanvas.toDataURL('image/png') };
+                renderCanvas();
+            }
+        }
+
+        function fhUndo() {
+            if (!fhHistory.length || !fhMaskCanvas) return;
+            const snap = fhHistory.pop();
+            fhMaskCanvas.getContext('2d').drawImage(snap, 0, 0);
+            fhRedrawPanel();
+            if (state.selectedClip) {
+                state.selectedClip.mask = { type: 'freehand', dataURL: fhMaskCanvas.toDataURL('image/png') };
+                renderCanvas();
+            }
+        }
+
+        function fhUpdateFeather() {
+            // Nessuna azione — il feather viene letto al momento del disegno
+        }
+
+        function fhApply() {
+            const clip = state.selectedClip;
+            if (!clip) { toast('Seleziona un clip'); return; }
+            if (!fhMaskCanvas) { toast('Disegna prima la maschera'); return; }
+            const invert = document.getElementById('fh-invert').checked;
+            clip.mask = {
+                type: 'freehand',
+                dataURL: fhMaskCanvas.toDataURL('image/png'),
+                invert
+            };
+            pushHistory(); renderCanvas(); setUnsaved();
+            toast('✅ Maschera forma libera applicata');
+        }
+
+        // ═══════════════════════════════════════════════════════
+        //  MASCHERE — circle, ellipse, rect, linear gradient
+        // ═══════════════════════════════════════════════════════
+
+        let maskPreviewType = null;
+
+        function setMaskType(type) {
+            maskPreviewType = type;
+            document.querySelectorAll('.mask-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('mbtn-' + type)?.classList.add('active');
+
+            const ctrl = document.getElementById('mask-controls');
+            const fhArea = document.getElementById('freehand-area');
+            const lbl = document.getElementById('mask-type-label');
+
+            if (type === 'freehand') {
+                // Nascondi sliders geometrici, mostra canvas pennello
+                ctrl.style.display = 'none';
+                fhArea.style.display = 'block';
+                // Init maschera pennello
+                fhEraseMode = false;
+                fhInit();
+                setTimeout(() => { fhSetup(); fhRedrawPanel(); }, 60);
+                return;
+            }
+
+            // Tipi geometrici
+            ctrl.style.display = 'block';
+            fhArea.style.display = 'none';
+
+            const names = { circle: '⬤ Cerchio', ellipse: '⬭ Ellisse', rect: '▬ Rettangolo', linear: '▐ Gradiente lineare' };
+            lbl.textContent = names[type] || type;
+
+            const wRow = document.getElementById('mk-w-row');
+            const hRow = document.getElementById('mk-h-row');
+            wRow.style.display = (type === 'circle') ? 'none' : 'flex';
+            hRow.style.display = (type === 'circle' || type === 'linear') ? 'none' : 'flex';
+
+            const clip = state.selectedClip;
+            if (clip?.mask && clip.mask.type === type) {
+                document.getElementById('mk-x').value = clip.mask.x ?? 0.5;
+                document.getElementById('mk-y').value = clip.mask.y ?? 0.5;
+                document.getElementById('mk-w').value = clip.mask.w ?? 0.5;
+                document.getElementById('mk-h').value = clip.mask.h ?? 0.4;
+                document.getElementById('mk-angle').value = clip.mask.angle ?? 0;
+                document.getElementById('mk-feather').value = clip.mask.feather ?? 0.05;
+                document.getElementById('mk-invert').checked = clip.mask.invert ?? false;
+            }
+            updateMaskLabels();
+            renderCanvas();
+        }
+
+        function updateMaskLabels() {
+            ['x', 'y', 'w', 'h'].forEach(k => {
+                const el = document.getElementById('mk-' + k);
+                const lbl = document.getElementById('mk-' + k + '-v');
+                if (el && lbl) lbl.textContent = Math.round(el.value * 100) + '%';
+            });
+            const angle = document.getElementById('mk-angle');
+            const angleLbl = document.getElementById('mk-angle-v');
+            if (angle && angleLbl) angleLbl.textContent = angle.value + '°';
+            const feather = document.getElementById('mk-feather');
+            const featherLbl = document.getElementById('mk-feather-v');
+            if (feather && featherLbl) featherLbl.textContent = Math.round(feather.value * 100) + '%';
+        }
+
+        function updateMask() {
+            updateMaskLabels();
+            // Live preview: aggiorna mask temporanea sul clip selezionato
+            const clip = state.selectedClip;
+            if (clip && maskPreviewType) {
+                clip.mask = getMaskFromUI();
+                renderCanvas();
+            }
+        }
+
+        function getMaskFromUI() {
+            return {
+                type: maskPreviewType,
+                x: parseFloat(document.getElementById('mk-x').value),
+                y: parseFloat(document.getElementById('mk-y').value),
+                w: parseFloat(document.getElementById('mk-w').value),
+                h: parseFloat(document.getElementById('mk-h').value),
+                angle: parseFloat(document.getElementById('mk-angle').value),
+                feather: parseFloat(document.getElementById('mk-feather').value),
+                invert: document.getElementById('mk-invert').checked,
+            };
+        }
+
+        function applyMask() {
+            const clip = state.selectedClip;
+            if (!clip) { toast('Seleziona un clip'); return; }
+            if (!maskPreviewType) { toast('Scegli un tipo di maschera'); return; }
+            clip.mask = getMaskFromUI();
+            pushHistory(); renderCanvas(); setUnsaved();
+            toast('✅ Maschera applicata');
+        }
+
+        function removeMask() {
+            const clip = state.selectedClip;
+            if (!clip) return;
+            delete clip.mask;
+            maskPreviewType = null;
+            document.querySelectorAll('.mask-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('mask-controls').style.display = 'none';
+            pushHistory(); renderCanvas(); setUnsaved();
+            toast('Maschera rimossa');
+        }
+
+        // Applica la maschera al canvas context prima di disegnare il clip
+        // Restituisce true se ha applicato una maschera (richiede ctx.restore() dopo)
+        // Cache immagini freehand già caricate (evita reload ad ogni frame)
+        const fhImgCache = {};
+
+        // Costruisce (e cachea) il canvas maschera a partire da dataURL
+        // gestendo inversione e ridimensionamento alla risoluzione di render
+        function _fhGetMaskCanvas(maskData, cw, ch) {
+            const key = maskData.dataURL.slice(0, 40) + cw + 'x' + ch + (maskData.invert ? 'i' : '');
+            if (fhImgCache[key]) return fhImgCache[key];
+
+            const mc = document.createElement('canvas');
+            mc.width = cw; mc.height = ch;
+            const mctx = mc.getContext('2d');
+
+            const img = new Image();
+            img.onload = () => {
+                mctx.clearRect(0, 0, cw, ch);
+                if (maskData.invert) {
+                    // Inverti: parti nere diventano bianche e viceversa
+                    mctx.drawImage(img, 0, 0, cw, ch);
+                    const id = mctx.getImageData(0, 0, cw, ch);
+                    const d = id.data;
+                    for (let i = 0; i < d.length; i += 4) {
+                        d[i] = 255 - d[i];
+                        d[i + 1] = 255 - d[i + 1];
+                        d[i + 2] = 255 - d[i + 2];
+                    }
+                    mctx.putImageData(id, 0, 0);
+                } else {
+                    mctx.drawImage(img, 0, 0, cw, ch);
+                }
+                // Converti in scala alpha: bianco = opaco, nero = trasparente
+                const id2 = mctx.getImageData(0, 0, cw, ch);
+                const d2 = id2.data;
+                for (let i = 0; i < d2.length; i += 4) {
+                    const lum = d2[i]; // usa canale R come luminanza
+                    d2[i] = 0; d2[i + 1] = 0; d2[i + 2] = 0;
+                    d2[i + 3] = lum; // alfa = luminanza
+                }
+                mctx.putImageData(id2, 0, 0);
+                fhImgCache[key] = mc;
+            };
+            img.src = maskData.dataURL;
+
+            // Restituisce un canvas vuoto (trasparente=bianco) se img non è ancora caricata
+            // la prossima chiamata troverà il canvas in cache
+            const fallback = document.createElement('canvas');
+            fallback.width = cw; fallback.height = ch;
+            const fctx = fallback.getContext('2d');
+            fctx.fillStyle = '#fff'; fctx.fillRect(0, 0, cw, ch);
+            return fallback;
+        }
+
+        function applyMaskToCtx(ctx, clip, cw, ch) {
+            const m = clip.mask;
+            if (!m) return false;
+
+            // ── Forma libera ────────────────────────────────────
+            if (m.type === 'freehand' && m.dataURL) {
+                return { type: 'gradient', maskCanvas: _fhGetMaskCanvas(m, cw, ch) };
+            }
+
+            const cx = m.x * cw;
+            const cy = m.y * ch;
+            const feather = m.feather * Math.min(cw, ch);
+            const angle = (m.angle * Math.PI) / 180;
+
+            ctx.save();
+
+            if (m.type === 'linear') {
+                // Gradiente lineare come maschera — usa compositing
+                const cos = Math.cos(angle), sin = Math.sin(angle);
+                const gx1 = cx - cos * cw * 0.5, gy1 = cy - sin * cw * 0.5;
+                const gx2 = cx + cos * cw * 0.5, gy2 = cy + sin * cw * 0.5;
+                // Crea canvas maschera offscreen
+                const maskCanvas = document.createElement('canvas');
+                maskCanvas.width = cw; maskCanvas.height = ch;
+                const mctx = maskCanvas.getContext('2d');
+                const grad = mctx.createLinearGradient(gx1, gy1, gx2, gy2);
+                if (m.invert) {
+                    grad.addColorStop(0, 'rgba(0,0,0,0)');
+                    grad.addColorStop(Math.max(0, 0.5 - m.feather), 'rgba(0,0,0,0)');
+                    grad.addColorStop(Math.min(1, 0.5 + m.feather), 'rgba(0,0,0,1)');
+                    grad.addColorStop(1, 'rgba(0,0,0,1)');
+                } else {
+                    grad.addColorStop(0, 'rgba(0,0,0,1)');
+                    grad.addColorStop(Math.max(0, 0.5 - m.feather), 'rgba(0,0,0,1)');
+                    grad.addColorStop(Math.min(1, 0.5 + m.feather), 'rgba(0,0,0,0)');
+                    grad.addColorStop(1, 'rgba(0,0,0,0)');
+                }
+                mctx.fillStyle = grad;
+                mctx.fillRect(0, 0, cw, ch);
+                // Usa destination-in per tagliare il clip con la maschera
+                // Questo viene gestito in drawClipWithMask — segnaliamo con return 'gradient'
+                ctx.restore();
+                return { type: 'gradient', maskCanvas };
+            }
+
+            // Path-based masks (circle, ellipse, rect)
+            ctx.beginPath();
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(angle);
+
+            if (m.type === 'circle') {
+                const r = m.w * Math.min(cw, ch) * 0.5;
+                ctx.arc(0, 0, r, 0, Math.PI * 2);
+            } else if (m.type === 'ellipse') {
+                const rx = m.w * cw * 0.5;
+                const ry = m.h * ch * 0.5;
+                ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
+            } else if (m.type === 'rect') {
+                const rw = m.w * cw, rh = m.h * ch;
+                const corner = Math.min(rw, rh) * 0.05;
+                ctx.roundRect ? ctx.roundRect(-rw / 2, -rh / 2, rw, rh, corner)
+                    : ctx.rect(-rw / 2, -rh / 2, rw, rh);
+            }
+
+            ctx.restore(); // undo rotate+translate
+
+            if (m.invert) {
+                // Inverti: clip tutto TRANNE la forma
+                ctx.rect(0, 0, cw, ch); // outer rect
+                ctx.clip('evenodd');
+            } else {
+                ctx.clip();
+            }
+
+            return true;
+        }
+
+        // Funzione wrapper: disegna un video/immagine applicando la maschera gradient se presente
+        function drawWithGradientMask(ctx, drawFn, maskData, cw, ch) {
+            // 1. Disegna il clip su offscreen
+            const oc = document.createElement('canvas');
+            oc.width = cw; oc.height = ch;
+            const octx = oc.getContext('2d');
+            drawFn(octx);
+            // 2. Applica la maschera
+            octx.globalCompositeOperation = 'destination-in';
+            octx.drawImage(maskData.maskCanvas, 0, 0);
+            octx.globalCompositeOperation = 'source-over';
+            // 3. Disegna il risultato sul ctx principale
+            ctx.drawImage(oc, 0, 0);
+        }
 
         // ═══════════════════════════════════════════════════════
         //  CHROMA KEY — per-pixel canvas processing
