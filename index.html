@@ -373,6 +373,30 @@
             display: flex
         }
 
+        .media-rm-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(220, 30, 60, .9);
+            border: none;
+            color: #fff;
+            font-size: 12px;
+            line-height: 1;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 6;
+            padding: 0
+        }
+
+        .media-item:hover .media-rm-btn {
+            display: flex
+        }
+
         .preset-item {
             background: var(--bg3);
             border: 1px solid var(--border);
@@ -1001,6 +1025,32 @@
             text-overflow: ellipsis;
             pointer-events: none;
             flex: 1
+        }
+
+        .clip-props-btn {
+            position: absolute;
+            top: 2px;
+            right: 16px;
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            background: rgba(0, 0, 0, .45);
+            border: none;
+            color: rgba(255, 255, 255, .8);
+            font-size: 9px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            padding: 0;
+            line-height: 1;
+        }
+
+        @media(max-width:540px) {
+            .clip-props-btn {
+                display: flex
+            }
         }
 
         .clip-speed {
@@ -1956,6 +2006,13 @@
                         onclick="document.getElementById('fi-audio').click()">🎵 Audio</button>
                 </div>
                 <div class="media-grid" id="media-grid"></div>
+                <div id="media-lib-footer"
+                    style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+                    <span id="media-lib-info" style="font-size:9px;color:var(--text3);flex:1">📚 Libreria locale</span>
+                    <button class="tbtn"
+                        style="font-size:9px;height:20px;padding:0 7px;color:#ff4466;border-color:#ff446630"
+                        onclick="clearMediaLibrary()">🗑 Svuota</button>
+                </div>
             </div>
             <!-- TEXT TAB -->
             <div class="tab" id="text-tab">
@@ -2560,6 +2617,8 @@
             updateTimeDisplay();
             document.addEventListener('keydown', handleKeyboard);
             pushHistory();
+            // Carica prima la libreria media (file importati in sessioni precedenti)
+            await loadMediaLibrary();
             const saved = await loadAutosave();
             if (saved && saved.tracks?.some(t => t.clips.length > 0)) {
                 state.tracks = saved.tracks;
@@ -2593,6 +2652,12 @@
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.getElementById(id + '-tab')?.classList.add('active');
             if (id === 'chroma') setTimeout(ckPreview, 80);
+            if (id === 'media') {
+                getLibrarySize().then(({ count, bytes }) => {
+                    const el = document.getElementById('media-lib-info');
+                    if (el) el.textContent = `📚 ${count} file in libreria — ${formatBytes(bytes)}`;
+                });
+            }
             if (id === 'titles') setTimeout(initTitleTemplates, 20);
             if (id === 'eq') setTimeout(onSwitchEq, 20);
             if (id === 'mask') { const c = state.selectedClip; if (c?.mask) { setMaskType(c.mask.type); } }
@@ -2710,6 +2775,8 @@
             state.mediaPool.push(item);
             renderMediaGrid();
             setUnsaved();
+            // Salva nella libreria persistente (asincrono, non blocca UI)
+            saveFileToLibrary(file, item).catch(e => console.warn('[MediaLib]', e));
             toast('Importato: ' + file.name);
         }
 
@@ -2736,7 +2803,7 @@
                 } else {
                     div.innerHTML = `<div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:24px;background:var(--bg4)">${micon(item)}<span style="font-size:9px;color:var(--text3);text-transform:uppercase">${ext}</span></div>`;
                 }
-                div.innerHTML += `<div class="mi-dur">${fmtDur(item.duration || 5)}</div><div class="mi-info">${item.name}</div><div class="mi-add" onclick="addClipFromMedia('${item.id}',false);event.stopPropagation()">+</div>`;
+                div.innerHTML += `<div class="mi-dur">${fmtDur(item.duration || 5)}</div><div class="mi-info">${item.name}</div><div class="mi-add" onclick="addClipFromMedia('${item.id}',false);event.stopPropagation()">+</div><button class="media-rm-btn" onclick="removeMediaItem('${item.id}');event.stopPropagation()" title="Rimuovi dalla libreria">×</button>`;
                 // Double-click = add to main track; shift+click = add as overlay
                 div.ondblclick = () => addClipFromMedia(item.id, false);
                 div.title = 'Doppio clic: aggiungi • Shift+clic: aggiungi come overlay';
@@ -2927,7 +2994,15 @@
     ${clip.type === 'audio' ? '<div class="waveform"></div>' : ''}
     <span class="clip-name">${clip.type === 'text' ? '✏ ' : ''}${clip.name}</span>
     ${speedBadge}${transBadge}
+    <button class="clip-props-btn" title="Proprietà" onclick="event.stopPropagation();selectClip(clip_${clip.id},track_${track.id});mobOpenProps()">⚙</button>
     <div class="resize-r"></div>`;
+            // Fix: i riferimenti alle variabili devono essere live
+            el.querySelector('.clip-props-btn')?.addEventListener('click', e => {
+                e.stopPropagation();
+                selectClip(clip, track);
+                if (isMobile()) mobOpenProps();
+                else {/* desktop: il pannello destro è già visibile */ }
+            });
             el.addEventListener('mousedown', e => {
                 if (e.target.classList.contains('resize-l') || e.target.classList.contains('resize-r')) return;
                 selectClip(clip, track); startDrag(e, clip, track, el, pps);
@@ -3068,7 +3143,7 @@
         function selectClip(clip, track) {
             state.selectedClip = clip; state.selectedTrack = track;
             renderTracks(); renderClipProps(); renderCanvas(); renderKfPanel();
-            if (isMobile()) setTimeout(mobOnClipSelected, 50);
+            // Mobile: props NON si aprono automaticamente al tap — usa il pulsante ⚙ sulla clip
             // Sync color grade sliders
             if (clip) {
                 ['brightness', 'contrast', 'saturation'].forEach(k => {
@@ -4380,6 +4455,187 @@
                 if (fo) { fo.value = clip.fadeOut ?? 0; document.getElementById('eq-fadeout-v').textContent = (clip.fadeOut ?? 0).toFixed(1) + 's'; }
                 if (vl) { vl.value = clip.volume ?? 1; document.getElementById('eq-volume-v').textContent = Math.round((clip.volume ?? 1) * 100) + '%'; }
             }
+        }
+
+
+        // ═══════════════════════════════════════════════════════
+        //  MEDIA LIBRARY PERSISTENTE (stile CapCut)
+        //  — tutti i file importati vengono salvati in IndexedDB
+        //  — all'avvio vengono ricaricati automaticamente
+        // ═══════════════════════════════════════════════════════
+
+        // Apre (o crea) il database per la libreria media
+        async function openMediaLibDB() {
+            return new Promise((res, rej) => {
+                const req = indexedDB.open('DalziMediaLib', 2);
+                req.onupgradeneeded = e => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains('files')) {
+                        const store = db.createObjectStore('files', { keyPath: 'id' });
+                        store.createIndex('addedAt', 'addedAt');
+                    }
+                };
+                req.onsuccess = () => res(req.result);
+                req.onerror = () => rej(req.error);
+            });
+        }
+
+        let _mediaLibDB = null;
+        async function getMediaLibDB() {
+            if (!_mediaLibDB) _mediaLibDB = await openMediaLibDB();
+            return _mediaLibDB;
+        }
+
+        // Salva un file nella libreria persistente
+        async function saveFileToLibrary(file, mediaItem) {
+            try {
+                const db = await getMediaLibDB();
+                const record = {
+                    id: mediaItem.id,
+                    name: file.name,
+                    type: mediaItem.type,
+                    mimeType: file.type || '',
+                    size: file.size,
+                    addedAt: Date.now(),
+                    blob: file,  // il Blob originale completo
+                };
+                await new Promise((res, rej) => {
+                    const tx = db.transaction('files', 'readwrite');
+                    tx.objectStore('files').put(record);
+                    tx.oncomplete = res;
+                    tx.onerror = () => rej(tx.error);
+                });
+            } catch (e) {
+                console.warn('[MediaLib] Salvataggio fallito:', e);
+            }
+        }
+
+        // Elimina un file dalla libreria
+        async function removeFileFromLibrary(mediaId) {
+            try {
+                const db = await getMediaLibDB();
+                await new Promise((res, rej) => {
+                    const tx = db.transaction('files', 'readwrite');
+                    tx.objectStore('files').delete(mediaId);
+                    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+                });
+            } catch (e) { console.warn('[MediaLib] Rimozione fallita:', e); }
+        }
+
+        // Carica tutti i file salvati e li aggiunge alla media pool
+        async function loadMediaLibrary() {
+            try {
+                const db = await getMediaLibDB();
+                const records = await new Promise((res, rej) => {
+                    const tx = db.transaction('files', 'readonly');
+                    const req = tx.objectStore('files').index('addedAt').getAll();
+                    req.onsuccess = () => res(req.result);
+                    req.onerror = () => rej(req.error);
+                });
+                if (!records || records.length === 0) return;
+
+                let loaded = 0;
+                for (const rec of records) {
+                    // Evita duplicati (se già nella pool)
+                    if (state.mediaPool.find(m => m.id === rec.id)) continue;
+
+                    // Ricostruisci il File dal Blob
+                    const file = new File([rec.blob], rec.name, { type: rec.mimeType || rec.blob.type });
+                    const url = URL.createObjectURL(file);
+
+                    const item = {
+                        id: rec.id,
+                        name: rec.name,
+                        type: rec.type,
+                        url,
+                        file,
+                        duration: 5,
+                        fromLibrary: true,
+                    };
+
+                    if (rec.type === 'video') {
+                        const v = document.createElement('video');
+                        v.src = url; v.preload = 'metadata'; v.muted = true;
+                        v.onloadedmetadata = () => { item.duration = v.duration; item.videoEl = v; renderMediaGrid(); };
+                        v.onerror = () => { item.unsupported = true; renderMediaGrid(); };
+                    } else if (rec.type === 'audio') {
+                        const a = document.createElement('audio');
+                        a.src = url; a.preload = 'metadata';
+                        a.onloadedmetadata = () => { item.duration = a.duration; item.audioEl = a; };
+                    } else {
+                        const img = new Image(); img.src = url;
+                        img.onload = () => { item.previewUrl = url; renderMediaGrid(); };
+                    }
+
+                    // Mantieni il mediaId counter sincronizzato
+                    const numId = parseInt(rec.id.replace('m', ''), 10);
+                    if (!isNaN(numId) && numId >= mediaId) mediaId = numId;
+
+                    state.mediaPool.push(item);
+                    loaded++;
+                }
+                if (loaded > 0) {
+                    renderMediaGrid();
+                    toast(`📚 Libreria: ${loaded} file caricati`);
+                }
+            } catch (e) {
+                console.warn('[MediaLib] Caricamento fallito:', e);
+            }
+        }
+
+        // Elimina TUTTI i file dalla libreria (pulsante "Svuota libreria")
+        async function clearMediaLibrary() {
+            if (!confirm(`Eliminare tutti i ${state.mediaPool.length} file dalla libreria?\n\nI clip già in timeline rimarranno ma non potranno essere riresi dopo il riavvio.`)) return;
+            try {
+                const db = await getMediaLibDB();
+                await new Promise((res, rej) => {
+                    const tx = db.transaction('files', 'readwrite');
+                    tx.objectStore('files').clear();
+                    tx.oncomplete = res; tx.onerror = () => rej(tx.error);
+                });
+                // Revoca URL e svuota pool
+                state.mediaPool.forEach(m => { try { URL.revokeObjectURL(m.url); } catch (e) { } });
+                state.mediaPool = [];
+                renderMediaGrid();
+                toast('🗑 Libreria svuotata');
+            } catch (e) {
+                console.warn('[MediaLib] Clear fallita:', e);
+                toast('⚠ Impossibile svuotare la libreria');
+            }
+        }
+
+        // Elimina un singolo file dalla libreria (tasto × sulla card media)
+        async function removeMediaItem(id) {
+            const idx = state.mediaPool.findIndex(m => m.id === id);
+            if (idx === -1) return;
+            const item = state.mediaPool[idx];
+            try { URL.revokeObjectURL(item.url); } catch (e) { }
+            state.mediaPool.splice(idx, 1);
+            await removeFileFromLibrary(id);
+            renderMediaGrid();
+            toast('File rimosso dalla libreria');
+        }
+
+        // Calcola dimensione totale della libreria (approssimata)
+        async function getLibrarySize() {
+            try {
+                const db = await getMediaLibDB();
+                const records = await new Promise((res, rej) => {
+                    const tx = db.transaction('files', 'readonly');
+                    const req = tx.objectStore('files').getAll();
+                    req.onsuccess = () => res(req.result);
+                    req.onerror = () => rej(req.error);
+                });
+                const totalBytes = records.reduce((s, r) => s + (r.size || 0), 0);
+                return { count: records.length, bytes: totalBytes };
+            } catch (e) { return { count: 0, bytes: 0 }; }
+        }
+
+        function formatBytes(b) {
+            if (b < 1024) return b + ' B';
+            if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+            if (b < 1073741824) return (b / 1048576).toFixed(1) + ' MB';
+            return (b / 1073741824).toFixed(2) + ' GB';
         }
 
         // ═══════════════════════════════════════════════════════
