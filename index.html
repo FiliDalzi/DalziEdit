@@ -1535,17 +1535,18 @@
                 </div>
                 <!-- Multi-format inputs -->
                 <input type="file" id="fi-all" multiple
-                    accept="video/*,image/*,audio/*,.mp4,.mov,.avi,.mkv,.webm,.3gp,.3g2,.m4v,.hevc,.jpg,.jpeg,.png,.gif,.webp,.heic,.heif,.avif,.mp3,.wav,.aac,.m4a,.flac,.opus"
+                    accept="video/*,image/*,audio/*,video/mp4,video/quicktime,video/x-m4v,video/x-matroska,video/webm,video/3gpp,video/x-msvideo,.mp4,.mov,.avi,.mkv,.webm,.3gp,.3g2,.m4v,.hevc,.ts,.mts,.jpg,.jpeg,.png,.gif,.webp,.heic,.heif,.avif,.mp3,.wav,.aac,.m4a,.flac,.opus"
                     style="display:none" onchange="handleFiles(event)">
                 <input type="file" id="fi-video" multiple
-                    accept="video/*,.mp4,.mov,.avi,.mkv,.webm,.3gp,.3g2,.m4v,.hevc" style="display:none"
-                    onchange="handleFiles(event)">
+                    accept="video/*,video/mp4,video/quicktime,video/x-m4v,video/x-matroska,video/webm,video/3gpp,video/x-msvideo,.mp4,.mov,.avi,.mkv,.webm,.3gp,.3g2,.m4v,.hevc,.ts,.mts"
+                    style="display:none" onchange="handleFiles(event)">
                 <input type="file" id="fi-image" multiple accept="image/*,.jpg,.jpeg,.png,.gif,.webp,.heic,.heif,.avif"
                     style="display:none" onchange="handleFiles(event)">
                 <input type="file" id="fi-audio" multiple accept="audio/*,.mp3,.wav,.aac,.m4a,.flac,.opus,.ogg,.wma"
                     style="display:none" onchange="handleFiles(event)">
-                <input type="file" id="file-input" multiple accept="video/*,image/*,audio/*" style="display:none"
-                    onchange="handleFiles(event)">
+                <input type="file" id="file-input" multiple
+                    accept="video/*,image/*,audio/*,video/mp4,video/quicktime,video/x-m4v,.mp4,.mov,.hevc,.m4v"
+                    style="display:none" onchange="handleFiles(event)">
                 <div class="mobile-btns">
                     <button class="tbtn" style="flex:1;justify-content:center"
                         onclick="document.getElementById('fi-video').click()">🎬 Video</button>
@@ -2011,9 +2012,13 @@
             Array.from(e.dataTransfer.files).forEach(addMediaFile);
         }
         function detectType(f) {
-            if (f.type.startsWith('video/')) return 'video';
-            if (f.type.startsWith('audio/')) return 'audio';
-            if (f.type.startsWith('image/')) return 'image';
+            const mime = (f.type || '').toLowerCase();
+            // iOS/Safari usa video/quicktime per .mov e .hevc, o restituisce stringa vuota
+            const videoMimes = ['video/', 'video/quicktime', 'video/x-m4v', 'video/x-matroska', 'video/3gpp', 'video/x-msvideo'];
+            if (videoMimes.some(m => mime.startsWith(m) || mime === m)) return 'video';
+            if (mime.startsWith('audio/')) return 'audio';
+            if (mime.startsWith('image/')) return 'image';
+            // Fallback su estensione (comune su iOS dove mime può essere vuoto)
             const ext = (f.name.split('.').pop() || '').toLowerCase();
             const V = ['mp4', 'mov', 'avi', 'mkv', 'webm', '3gp', '3g2', 'm4v', 'wmv', 'flv', 'ogv', 'hevc', 'ts', 'mts'];
             const A = ['mp3', 'wav', 'ogg', 'aac', 'm4a', 'flac', 'opus', 'weba', 'wma', 'aiff', 'caf'];
@@ -3464,5 +3469,4 @@
         init();
     </script>
 </body>
-
 </html>
